@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Empleado</title>
+</head>
+<body>
+    <h2>Agregar Empleado</h2>
+    <form action="/api/empleado/add" method="POST">
+        <div>
+            <label for="cedula_empleado">Cédula del Empleado:</label>
+            <input type="text" id="cedula_empleado" name="cedula_empleado" required>
+        </div>
+        <br>
+        <div>
+            <label for="nombre_completo">Nombre Completo:</label>
+            <input type="text" id="nombre_completo" name="nombre_completo" required>
+        </div>
+        <br>
+        <div>
+            <label for="correo">Correo Electrónico:</label>
+            <input type="email" id="correo" name="correo" required>
+        </div>
+        <br>
+        <div>
+            <label for="rol">Rol:</label>
+            <input type="text" id="rol" name="rol" required>
+        </div>
+        <br>
+        <div>
+            <button type="submit">Agregar Empleado</button>
+        </div>
+    </form>
+</body>
+</html>

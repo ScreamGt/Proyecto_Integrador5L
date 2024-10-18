@@ -3,7 +3,7 @@
 
 class Empleado:
     #constructor empleado
-    def __init__(self, cedula, nombre, correo, rol) -> None:
+    def __init__(self, cedula, nombre = None, correo = None, rol = None) -> None:
         self.cedula = cedula
         self.nombre = nombre
         self.correo = correo

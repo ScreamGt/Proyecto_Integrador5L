@@ -17,7 +17,7 @@
     <meta name="keywords" content="">
     <meta name="author" content="Phoenixcoded" />
     <!-- Favicon icon -->
-    <link rel="icon" href="{{ url_for('static', filename='/assets/images/favicon.ico') }} " type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='assets/images/favicon.ico') }}" type="image/x-icon">
 
     <!-- vendor css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='/assets/css/style.css') }}">
@@ -116,8 +116,8 @@
             <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
             <a href="#!" class="b-brand">
                 <!-- ========   change your logo hear   ============ -->
-                <img src="assets/images/logo.png" alt="" class="logo">
-                <img src="assets/images/logo-icon.png" alt="" class="logo-thumb">
+                <img src="{{ url_for('static', filename='/assets/images/logo.png') }}" alt="" class="logo">
+                <img src="{{ url_for('static', filename='/assets/images/logo-icon.png') }}" alt="" class="logo-thumb">
             </a>
             <a href="#!" class="mob-toggler">
                 <i class="feather icon-more-vertical"></i>
@@ -145,7 +145,7 @@
                                 </li>
                                 <li class="notification">
                                     <div class="media">
-                                        <img class="img-radius" src="assets/images/user/avatar-1.jpg"
+                                        <img class="img-radius" src="{{ url_for('static', filename='/assets/images/user/avatar-1.jpg') }}"
                                             alt="Generic placeholder image">
                                         <div class="media-body">
                                             <p><strong>John Doe</strong><span class="n-time text-muted"><i
@@ -159,7 +159,7 @@
                                 </li>
                                 <li class="notification">
                                     <div class="media">
-                                        <img class="img-radius" src="assets/images/user/avatar-2.jpg"
+                                        <img class="img-radius" src="{{ url_for('static', filename='/assets/images/user/avatar-2.jpg') }}"
                                             alt="Generic placeholder image">
                                         <div class="media-body">
                                             <p><strong>Joseph William</strong><span class="n-time text-muted"><i
@@ -170,7 +170,7 @@
                                 </li>
                                 <li class="notification">
                                     <div class="media">
-                                        <img class="img-radius" src="assets/images/user/avatar-1.jpg"
+                                        <img class="img-radius" src="{{ url_for('static', filename='/assets/images/user/avatar-1.jpg') }}"
                                             alt="Generic placeholder image">
                                         <div class="media-body">
                                             <p><strong>Sara Soudein</strong><span class="n-time text-muted"><i
@@ -181,7 +181,7 @@
                                 </li>
                                 <li class="notification">
                                     <div class="media">
-                                        <img class="img-radius" src="assets/images/user/avatar-2.jpg"
+                                        <img class="img-radius" src="{{ url_for('static', filename='/assets/images/user/avatar-2.jpg') }}"
                                             alt="Generic placeholder image">
                                         <div class="media-body">
                                             <p><strong>Joseph William</strong><span class="n-time text-muted"><i
@@ -204,7 +204,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right profile-notification">
                             <div class="pro-head">
-                                <img src="assets/images/user/avatar-1.jpg" class="img-radius" alt="User-Profile-Image">
+                                <img src="{{ url_for('static', filename='/assets/images/user/avatar-1.jpgo') }}" class="img-radius" alt="User-Profile-Image">
                                 <span>John Doe</span>
                                 <a href="auth-signin.html" class="dud-logout" title="Logout">
                                     <i class="feather icon-log-out"></i>
@@ -283,16 +283,16 @@
     <!-- [ Main Content ] end -->
 
     <!-- Required Js -->
-    <script src="assets/js/vendor-all.min.js"></script>
-    <script src="assets/js/plugins/bootstrap.min.js"></script>
-    <script src="assets/js/pcoded.min.js"></script>
+    <script src="{{ url_for('static', filename='/assets/js/vendor-all.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='/assets/js/plugins/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='/assets/js/pcoded.min.js') }}"></script>
 
     <!-- Apex Chart -->
-    <script src="assets/js/plugins/apexcharts.min.js"></script>
+    <script src="{{ url_for('static', filename='/assets/js/plugins/apexcharts.min.js') }}"></script>
 
 
     <!-- custom-chart js -->
-    <script src="assets/js/pages/dashboard-main.js"></script>
+    <script src="{{ url_for('static', filename='/assets/js/pages/dashboard-main.js') }}"></script>
 </body>
 
 </html>

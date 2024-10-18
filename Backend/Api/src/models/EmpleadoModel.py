@@ -75,3 +75,45 @@ class EmpleadoModel:
         # Manejar en caso de Error
         except Exception as ex:
             raise Exception(ex)
+
+    # Método para insertar un empleado en la BD
+    @classmethod
+    def update_empleado(self, empleado):
+        try:
+            connection = get_connection()
+
+            # Query con procedimiento para insertar un empleado
+            with connection.cursor() as cursor:
+                print(empleado.cedula, empleado.nombre, empleado.correo, empleado.rol)
+                cursor.execute("CALL actualizar_empleado(%s, %s, %s)", (empleado.cedula, empleado.nombre, empleado.correo,))
+                affected_rows = cursor.rowcount
+                connection.commit()
+
+            # Cerrar conexión BD y mostrar filas afectadas
+            connection.close()
+            return affected_rows
+
+        # Manejar en caso de Error
+        except Exception as ex:
+            raise Exception(ex)
+
+    # Método para insertar un empleado en la BD
+    @classmethod
+    def delete_empleado(self, empleado):
+        try:
+            connection = get_connection()
+
+            # Query con procedimiento para insertar un empleado
+            with connection.cursor() as cursor:
+                print(empleado.cedula, empleado.nombre, empleado.correo, empleado.rol)
+                cursor.execute("CALL eliminar_empleado(%s)", (empleado.cedula,))
+                affected_rows = cursor.rowcount
+                connection.commit()
+
+            # Cerrar conexión BD y mostrar filas afectadas
+            connection.close()
+            return affected_rows
+
+        # Manejar en caso de Error
+        except Exception as ex:
+            raise Exception(ex)

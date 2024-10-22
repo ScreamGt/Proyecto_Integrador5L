@@ -20,7 +20,7 @@
     <link rel="icon" href="{{ url_for('static', filename='assets/images/favicon.ico') }}" type="image/x-icon">
 
     <!-- vendor css -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
     
     
 
@@ -99,8 +99,8 @@
                     <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
                     <a href="#!" class="b-brand">
                         <!-- ========   change your logo hear   ============ -->
-                        <img src="{{ url_for('static', filename='/assets/images/auth/unnamed.png') }}" alt="" class="logo">
-                        <img src="{{ url_for('static', filename='/assets/images/auth/unnamed.png') }}" alt="" class="logo-thumb">
+                        <!--<img src="{{ url_for('static', filename='assets/images/auth/unnamed.png') }}" alt="" class="logo">-->
+                        <!--src="{{ url_for('static', filename='assets/images/auth/unnamed.png') }}" alt="" class="logo-thumb">-->
                     </a>
                     <a href="#!" class="mob-toggler">
                         <i class="feather icon-more-vertical"></i>
@@ -180,12 +180,12 @@
                                     <div class="pro-head">
                                         <img src="{{ url_for('static', filename='/assets/images/user/avatar-1.jpg') }}" class="img-radius" alt="User-Profile-Image">
                                         <span>John Doe</span>
-                                        <a href="auth-signin.html" class="dud-logout" title="Logout">
+                                        <a href="/login" class="dud-logout" title="Logout">
                                             <i class="feather icon-log-out"></i>
                                         </a>
                                     </div>
                                     <ul class="pro-body">
-                                        <li><a href="auth-signin.html" class="dropdown-item"><i class="feather icon-lock"></i> Cerrar Sesion</a></li>
+                                        <li><a href="/login" class="dropdown-item"><i class="feather icon-lock"></i> Cerrar Sesion</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -201,16 +201,16 @@
 
 
     <!-- Required Js -->
-    <script src="{{ url_for('static', filename='/assets/js/vendor-all.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='/assets/js/plugins/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='/assets/js/pcoded.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/vendor-all.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/plugins/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/pcoded.min.js') }}"></script>
 
 <!-- Apex Chart -->
-<script src="{{ url_for('static', filename='/assets/js/plugins/apexcharts.min.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/plugins/apexcharts.min.js') }}"></script>
 
 
 <!-- custom-chart js -->
-<script src="{{ url_for('static', filename='/assets/js/pages/dashboard-main.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/pages/dashboard-main.js') }}"></script>
 </body>
 
 <!-- [ Footer ] start -->

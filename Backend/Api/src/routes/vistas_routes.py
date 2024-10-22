@@ -8,7 +8,7 @@ Vistas = Blueprint('vistas_routes', __name__)
 def index():
     return render_template("index.html")
 
-@Vistas.route('/Login')
+@Vistas.route('/login')
 def Login():
     return render_template("auth-signin.html")
 
@@ -16,7 +16,7 @@ def Login():
 def addTransacciones():
     return render_template("nueva-transaccion.html")
 
-@Vistas.route('/Proveedores')
+@Vistas.route('/proveedores')
 def proveedores():
     return render_template("view_proveedores.html")
 
@@ -24,7 +24,7 @@ def proveedores():
 def addProveedores():
     return render_template("nuevo-proveedor.html")
 
-@Vistas.route('/Productos')
+@Vistas.route('/productos')
 def productos():
     return render_template("view_productos.html")
 
@@ -32,7 +32,7 @@ def productos():
 def addProductos():
     return render_template("nuevo-producto.html")
 
-@Vistas.route('/Lote')
+@Vistas.route('/lote')
 def lote():
     return render_template("view_lote.html")
 
@@ -40,10 +40,19 @@ def lote():
 def addLote():
     return render_template("nuevo-lote.html")
 
-@Vistas.route('/Empleado')
+@Vistas.route('/empleado')
 def empleado():
     return render_template("view_empleado.html")
 
 @Vistas.route('/addEmpleado')
 def addEmpleado():
-    return render_template("nueva-transaccion.html")
+    return render_template("nuevo-empleado.html")
+
+
+@Vistas.route('/alertas')
+def alertas():
+    return render_template("view_alertas.html")
+
+@Vistas.route('/reportes')
+def reportes():
+    return render_template("view_reportes.html")

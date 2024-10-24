@@ -1,0 +1,47 @@
+{% extends "menu_plantilla.html" %}
+{% block title %}Inicio | Fruber{% endblock %}
+{% block mainContent %}	
+    <!-- [ Main Content ] start -->
+    <div class="pcoded-main-container">
+        <div class="pcoded-content">
+            <div class="card" style="background-color: white; border-radius: 8px; box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);">
+                <div class="card-body">
+                    <!-- Botón de volver con un color gris claro -->
+                    <a href="/categoria" class="btn btn-light" style="background-color: #f0f0f0; color: #333;">
+                        <i class="feather icon-arrow-left"></i> VOLVER
+                    </a>
+                    <form>
+                        <!-- Primera fila con 2 campos: Nombre del Proveedor y Teléfono -->
+                        <div class="row">
+                            <!-- Campo Nombre de la categoria -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="nombreProveedor">Categoria</label>
+                                    <input type="text" class="form-control" id="categoria" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                                </div>
+                            </div>
+                            <!-- Campo estado -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="telefono">Estado</label>
+                                    <input type="tel" class="form-control" id="estado" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Botón Agregar Proveedor -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn" style="background-color: #008080; color: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                                Agregar Categoria
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ Main Content ] end -->
+
+	{% endblock %}

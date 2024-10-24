@@ -54,7 +54,7 @@ class EmpleadoModel:
         except Exception as ex:
             raise Exception(ex)
 
-    # Método para insertar un empleado en la BD
+    # Metodo para insertar un empleado en la BD
     @classmethod
     def add_empleado(self, empleado):
         try:
@@ -68,7 +68,7 @@ class EmpleadoModel:
                 affected_rows = cursor.rowcount
                 connection.commit()
 
-            # Cerrar conexión BD y mostrar filas afectadas
+            # Cerrar conexion BD y mostrar filas afectadas
             connection.close()
             return affected_rows
 
@@ -76,7 +76,7 @@ class EmpleadoModel:
         except Exception as ex:
             raise Exception(ex)
 
-    # Método para insertar un empleado en la BD
+    # Metodo para insertar un empleado en la BD
     @classmethod
     def update_empleado(self, empleado):
         try:
@@ -89,7 +89,7 @@ class EmpleadoModel:
                 affected_rows = cursor.rowcount
                 connection.commit()
 
-            # Cerrar conexión BD y mostrar filas afectadas
+            # Cerrar conexion BD y mostrar filas afectadas
             connection.close()
             return affected_rows
 
@@ -97,7 +97,7 @@ class EmpleadoModel:
         except Exception as ex:
             raise Exception(ex)
 
-    # Método para insertar un empleado en la BD
+    # Metodo para insertar un empleado en la BD
     @classmethod
     def delete_empleado(self, empleado):
         try:
@@ -110,7 +110,7 @@ class EmpleadoModel:
                 affected_rows = cursor.rowcount
                 connection.commit()
 
-            # Cerrar conexión BD y mostrar filas afectadas
+            # Cerrar conexion BD y mostrar filas afectadas
             connection.close()
             return affected_rows
 

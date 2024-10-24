@@ -4,13 +4,14 @@ from models.entities.Empleado import Empleado
 
 Vistas = Blueprint('vistas_routes', __name__)
 
-@Vistas.route('/')
-def index():
-    return render_template("index.html")
-
 @Vistas.route('/login')
 def Login():
     return render_template("auth-signin.html")
+
+
+@Vistas.route('/')
+def index():
+    return render_template("index.html")
 
 @Vistas.route('/addTransacciones')
 def addTransacciones():
@@ -56,3 +57,11 @@ def alertas():
 @Vistas.route('/reportes')
 def reportes():
     return render_template("view_reportes.html")
+
+@Vistas.route('/categoria')
+def Categoria():
+    return render_template("view_categoria.html")
+
+@Vistas.route('/addCategoria')
+def addCategoria():
+    return render_template("nuevo-categoria.html")

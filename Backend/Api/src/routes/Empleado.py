@@ -1,9 +1,10 @@
-from flask import Blueprint , jsonify, render_template , request
+from flask import Blueprint , jsonify, request
 from models.EmpleadoModel import EmpleadoModel
 from models.entities.Empleado import Empleado
 
 main = Blueprint('empleado_blueprint', __name__)
 
+# Ruta para traer todos los empleados
 @main.route('/getAll')
 def get_empleados():
     try:
@@ -11,7 +12,8 @@ def get_empleados():
         return jsonify(empleados)
     except Exception as ex:
         return jsonify({'message' : str(ex)}) , 500
-    
+
+#Ruta para traer un empleado por su cedula
 @main.route('/getOne')
 def get_empleado():
     try:
@@ -23,11 +25,12 @@ def get_empleado():
             return jsonify(None)
     except Exception as ex:
         return jsonify({'message' : str(ex)}) , 500
-    
+
+#Ruta para agregar un empleado a la BD 
 @main.route('/add', methods=['POST'])
 def add_empleado():
     try:
-        # Recibir datos desde el formulario HTTP POST
+        # Recibir datos desde el formulario HTTP POST 
         cedula_empleado = request.form.get('cedula_empleado')
         nombre_completo = request.form.get('nombre_completo')
         correo = request.form.get('correo')
@@ -46,6 +49,7 @@ def add_empleado():
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
 
+#Ruta para actualizar un empleado
 @main.route('/update', methods=['PUT'])
 def update_empleado():
     try:
@@ -68,6 +72,7 @@ def update_empleado():
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
 
+#Ruta para eliminar un empleado de la BD
 @main.route('/delete', methods=['DELETE'])
 def delete_empleado():
     try:

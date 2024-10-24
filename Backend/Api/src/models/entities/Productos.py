@@ -3,7 +3,7 @@
 
 class Productos:
     #constructor empleado
-    def __init__(self, codigo_producto = None, nombre = None, precio_libra = None, estado = None, id_categoria = None) -> None:
+    def __init__(self, codigo_producto , nombre = None, precio_libra = None, estado = None, id_categoria = None) -> None:
         self.codigo_producto = codigo_producto
         self.nombre = nombre
         self.precio_libra = precio_libra

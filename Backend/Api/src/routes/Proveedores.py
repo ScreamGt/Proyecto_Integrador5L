@@ -13,35 +13,37 @@ def get_proveedores():
     except Exception as ex:
         return jsonify({'message' : str(ex)}) , 500
 
-#Ruta para traer un proveedor por su nombre
-@main.route('/getOne')
+# Ruta para traer a proveedores por su nombre
+@main.route('/getOne', methods=['GET'])
 def get_proveedor():
     try:
-        nombre = request.form.get('nombre')
-        proveedor = ProveedoresModel.get_proveedor(nombre)
-        if proveedor != None:
-            return jsonify(proveedor)
-        else:
-            return jsonify(None)
+        nombre = request.args.get('nombre')
+        if not nombre:  # Comprobar si el nombre está vacío
+            return jsonify({'message': 'El nombre es requerido'}), 400 
+        proveedores = ProveedoresModel.get_proveedor(nombre)
+        # Si no se encuentran proveedores, puedes retornar un mensaje específico
+        if not proveedores:
+            return jsonify({'message': 'No se encontraron proveedores'}), 404
+        return jsonify(proveedores)
     except Exception as ex:
-        return jsonify({'message' : str(ex)}) , 500
+        return jsonify({'message': str(ex)}), 500
+
 
 #Ruta para agregar un proveedor a la BD 
 @main.route('/add', methods=['POST'])
 def add_proveedor():
     try:
         # Recibir datos desde el formulario HTTP
-        telefono = request.form.get('telefono')
         nombre = request.form.get('nombre')
+        telefono = request.form.get('telefono')
         direccion = request.form.get('direccion')
+        estado = request.form.get('estado', "activo")  # Valor por defecto
 
-        # Crear el proveedor con los datos recibidos
-        proveedor = Proveedores(telefono, nombre, direccion)
-        affected_rows = ProveedoresModel.add_proveedor(proveedor)
+        success = ProveedoresModel.add_proveedor(nombre, telefono, direccion, estado)
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
-        if affected_rows == 1:  
-            return jsonify({'message': 'Proveedor agregado exitosamente'}),
+        if success:  
+            return jsonify({'message': 'Proveedor agregado exitosamente'})
         else:
             return jsonify({'message': "Ningun Proveedor Agregado"}), 404
     
@@ -49,20 +51,19 @@ def add_proveedor():
         return jsonify({'message': str(ex)}), 500
 
 #Ruta para actualizar un Proveedor
-@main.route('/update', methods=['PUT'])
+@main.route('/update', methods=['POST'])
 def update_proveedor():
     try:
         # Recibir datos desde el formulario HTTP POST
         telefono = request.form.get('telefono')
         nombre = request.form.get('nombre')
         direccion = request.form.get('direccion')
+        estado = request.form.get('estado', "activo")  # Valor por defecto
 
-        # Crear el proveedor con los datos recibidos
-        proveedor = Proveedores(telefono, nombre, direccion)
-        affected_rows = ProveedoresModel.update_proveedor(proveedor)
+        success = ProveedoresModel.update_proveedor(telefono, nombre, direccion, estado)
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
-        if affected_rows == 1:  
+        if success == 1:  
             return jsonify({'message': 'Proveedor actualizado exitosamente'}),
         else:
             return jsonify({'message': "Ningun Proveedor actualizado"}), 500

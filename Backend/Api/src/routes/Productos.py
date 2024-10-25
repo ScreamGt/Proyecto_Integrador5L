@@ -2,7 +2,7 @@ from flask import Blueprint , jsonify, request
 from models.ProductosModel import ProductosModel
 from models.entities.Productos import Productos
 
-main = Blueprint('producto_blueprint', __name__)
+main = Blueprint('productos_blueprint', __name__)
 
 # Ruta para traer todos los producto
 @main.route('/getAll')

@@ -16,8 +16,7 @@ class Proveedores:
         return {
             'id_proveedores': self.id_proveedores,
             'nombre': self.nombre,
-            'telefono': self.telefonoo,
+            'telefono': self.telefono,
             'direccion': self.direccion,
             'estado': self.estado,
-
         }

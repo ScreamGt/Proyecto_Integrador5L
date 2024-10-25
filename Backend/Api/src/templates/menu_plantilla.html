@@ -21,10 +21,22 @@
 
     <!-- vendor css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
-    
-    
+
+    <script>
+        var userData = JSON.parse(localStorage.getItem('userData'));
+
+        function vaciarUserData() {
+            localStorage.removeItem('userData');
+        }
+
+        if (userData == null) {
+            window.location.href = '/login';
+        }
+
+    </script>
 
 </head>
+
 <body class="">
     <!-- [ Pre-loader ] start -->
     <div class="loader-bg">
@@ -33,172 +45,181 @@
         </div>
     </div>
     <!-- [ Pre-loader ] End -->
-     
+
     <!-- [ navigation menu ] start -->
     <nav class="pcoded-navbar  ">
-    <div class="navbar-wrapper  ">
-        <div class="navbar-content scroll-div " >
-            
-            <div class="">
-                <div class="main-menu-header">
-                    <img class="img-radius" src="{{ url_for('static', filename='/assets/images/user/avatar-2.jpg') }}" alt="User-Profile-Image">
-                    <div class="user-details">
-                        <span>John Doe</span>
-                        <div id="more-details">Administrador<i class="fa fa-chevron-down m-l-5"></i></div>
+        <div class="navbar-wrapper  ">
+            <div class="navbar-content scroll-div ">
+
+                <div class="">
+                    <div class="main-menu-header">
+                        <img class="img-radius"
+                            src="{{ url_for('static', filename='/assets/images/user/avatar-2.jpg') }}"
+                            alt="User-Profile-Image">
+                        <div class="user-details">
+                            <span>John Doe</span>
+                            <div id="more-details">Administrador<i class="fa fa-chevron-down m-l-5"></i></div>
+                        </div>
+                    </div>
+                    <div class="collapse" id="nav-user-link">
+                        <ul class="list-unstyled">
+                            <li class="list-group-item"><a href="user-profile.html"><i
+                                        class="feather icon-user m-r-5"></i>Ver perfil</a></li>
+                            <li class="list-group-item"><a id="botonCerrarSesion"><i
+                                        class="feather icon-log-out m-r-5"></i>Cerrar Sesion</a></li>
+                        </ul>
                     </div>
                 </div>
-                <div class="collapse" id="nav-user-link">
-                    <ul class="list-unstyled">
-                        <li class="list-group-item"><a href="user-profile.html"><i class="feather icon-user m-r-5"></i>Ver perfil</a></li>
-                        <li class="list-group-item"><a href="/login"><i class="feather icon-log-out m-r-5"></i>Cerrar Sesion</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <ul class="nav pcoded-inner-navbar ">
-                <li class="nav-item pcoded-menu-caption">
-                    <label>Navegacion</label>
-                </li>
-                <li class="nav-item">
-                    <a href="/" class="nav-link "><span class="pcoded-micon"><i class="feather icon-repeat"></i></span><span class="pcoded-mtext">Transacciones</span></a>
-                </li>
-                <li class="nav-item">
-                    <a href="/proveedores" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Proveedores</span></a>
-                </li>
-                <li class="nav-item">
-                    <a href="/empleado" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Empleados</span></a>
-                </li>
-                <li class="nav-item pcoded-hasmenu">
-                    <a href="#!" class="nav-link "><span class="pcoded-micon"><i class="feather icon-layout"></i></span><span class="pcoded-mtext">Inventario</span></a>
-                    <ul class="pcoded-submenu">
-                        <li><a href="/lote"><i class="feather icon-grid"></i> Lote</a></li>
-                        <li><a href="/categoria"><i class="feather icon-grid"></i> Categoria</a></li>
-                        <li><a href="/productos"><i class="feather icon-shopping-cart"></i> Productos</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item pcoded-menu-caption">
-                    <label>Reportes &amp; Alertas</label>
-                </li>
-                <li class="nav-item">
-                    <a href="/reportes" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Reportes</span></a>
-                </li>
-                <li class="nav-item">
-                    <a href="/alertas" class="nav-link "><span class="pcoded-micon"><i class="feather icon-align-justify icon-bell"></i></span><span class="pcoded-mtext">Alertas</span></a>
-                </li>
 
-            </ul>			
+                <ul class="nav pcoded-inner-navbar ">
+                    <li class="nav-item pcoded-menu-caption">
+                        <label>Navegacion</label>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/" class="nav-link "><span class="pcoded-micon"><i
+                                    class="feather icon-repeat"></i></span><span
+                                class="pcoded-mtext">Transacciones</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/proveedores" class="nav-link "><span class="pcoded-micon"><i
+                                    class="feather icon-users"></i></span><span
+                                class="pcoded-mtext">Proveedores</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/empleado" class="nav-link "><span class="pcoded-micon"><i
+                                    class="feather icon-users"></i></span><span
+                                class="pcoded-mtext">Empleados</span></a>
+                    </li>
+                    <li class="nav-item pcoded-hasmenu">
+                        <a href="#!" class="nav-link "><span class="pcoded-micon"><i
+                                    class="feather icon-layout"></i></span><span
+                                class="pcoded-mtext">Inventario</span></a>
+                        <ul class="pcoded-submenu">
+                            <li><a href="/lote"><i class="feather icon-grid"></i> Lote</a></li>
+                            <li><a href="/categoria"><i class="feather icon-grid"></i> Categoria</a></li>
+                            <li><a href="/productos"><i class="feather icon-shopping-cart"></i> Productos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item pcoded-menu-caption">
+                        <label>Reportes &amp; Alertas</label>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/reportes" class="nav-link "><span class="pcoded-micon"><i
+                                    class="feather icon-file-text"></i></span><span
+                                class="pcoded-mtext">Reportes</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/alertas" class="nav-link "><span class="pcoded-micon"><i
+                                    class="feather icon-align-justify icon-bell"></i></span><span
+                                class="pcoded-mtext">Alertas</span></a>
+                    </li>
+
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
     <!-- [ navigation menu ] end -->
 
     <!-- [ Header ] start -->
     <header class="navbar pcoded-header navbar-expand-lg navbar-light header-dark">
-        
-            
-                <div class="m-header">
-                    <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
-                    <a href="#!" class="b-brand">
-                        <!-- ========   change your logo hear   ============ -->
-                        <!--<img src="{{ url_for('static', filename='assets/images/auth/unnamed.png') }}" alt="" class="logo">-->
-                        <!--src="{{ url_for('static', filename='assets/images/auth/unnamed.png') }}" alt="" class="logo-thumb">-->
-                    </a>
-                    <a href="#!" class="mob-toggler">
-                        <i class="feather icon-more-vertical"></i>
-                    </a>
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav ml-auto">
-                        <li>
-                            <div class="dropdown">
-                                <a class="dropdown-toggle" href="#" data-toggle="dropdown">
-                                    <i class="icon feather icon-bell"></i>
-                                    <span class="badge badge-pill badge-danger">5</span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right notification">
-                                    <div class="noti-head">
-                                        <h6 class="d-inline-block m-b-0">Notificaciones</h6>
-                                        <div class="float-right">
-                                            <a href="#!">limpiar todo</a>
+
+
+        <div class="m-header">
+            <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
+            <a href="#!" class="b-brand">
+                <!-- ========   change your logo hear   ============ -->
+                <!--<img src="{{ url_for('static', filename='assets/images/auth/unnamed.png') }}" alt="" class="logo">-->
+                <!--src="{{ url_for('static', filename='assets/images/auth/unnamed.png') }}" alt="" class="logo-thumb">-->
+            </a>
+            <a href="#!" class="mob-toggler">
+                <i class="feather icon-more-vertical"></i>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                            <i class="icon feather icon-bell"></i>
+                            <span class="badge badge-pill badge-danger">5</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right notification">
+                            <div class="noti-head">
+                                <h6 class="d-inline-block m-b-0">Notificaciones</h6>
+                                <div class="float-right">
+                                    <a href="#!">limpiar todo</a>
+                                </div>
+                            </div>
+                            <ul class="noti-body">
+                                <li class="n-title">
+                                    <p class="m-b-0">NUEVO</p>
+                                </li>
+                                <li class="notification">
+                                    <div class="media">
+                                        <img class="img-radius"
+                                            src="{{ url_for('static', filename='/assets/images/user/avatar-1.jpg') }}"
+                                            alt="Generic placeholder image">
+                                        <div class="media-body">
+                                            <p><strong>Alerta de Stock</strong><span class="n-time text-muted"><i
+                                                        class="icon feather icon-clock m-r-10"></i>5 min</span></p>
+                                            <p>Te queda poca yuca</p>
                                         </div>
                                     </div>
-                                    <ul class="noti-body">
-                                        <li class="n-title">
-                                            <p class="m-b-0">NUEVO</p>
-                                        </li>
-                                        <li class="notification">
-                                            <div class="media">
-                                                <img class="img-radius" src="{{ url_for('static', filename='/assets/images/user/avatar-1.jpg') }}" alt="Generic placeholder image">
-                                                <div class="media-body">
-                                                    <p><strong>Alerta de Stock</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>5 min</span></p>
-                                                    <p>Te queda poca yuca</p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="n-title">
-                                            <p class="m-b-0">RECIENTES</p>
-                                        </li>
-                                        <li class="notification">
-                                            <div class="media">
-                                                <img class="img-radius" src="{{ url_for('static', filename='/assets/images/user/avatar-2.jpg') }}" alt="Generic placeholder image">
-                                                <div class="media-body">
-                                                    <p><strong>Alerta de caducidad</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>10 min</span></p>
-                                                    <p>Es mejor que prepares pulpas de fresa</p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="notification">
-                                            <div class="media">
-                                                <img class="img-radius" src="{{ url_for('static', filename='/assets/images/user/avatar-1.jpg') }}" alt="Generic placeholder image">
-                                                <div class="media-body">
-                                                    <p><strong>Alerta de caducidad</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>12 min</span></p>
-                                                    <p>La papa pronto se va a daÃ±ar</p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="notification">
-                                            <div class="media">
-                                                <img class="img-radius" src="{{ url_for('static', filename='/assets/images/user/avatar-2.jpg') }}" alt="Generic placeholder image">
-                                                <div class="media-body">
-                                                    <p><strong>Alerta de stock</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>30 min</span></p>
-                                                    <p>Compra mas manzanas</p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div class="noti-footer">
-                                        <a href="#!">mirar todo</a>
+                                </li>
+                                <li class="n-title">
+                                    <p class="m-b-0">RECIENTES</p>
+                                </li>
+                                <li class="notification">
+                                    <div class="media">
+                                        <img class="img-radius"
+                                            src="{{ url_for('static', filename='/assets/images/user/avatar-2.jpg') }}"
+                                            alt="Generic placeholder image">
+                                        <div class="media-body">
+                                            <p><strong>Alerta de caducidad</strong><span class="n-time text-muted"><i
+                                                        class="icon feather icon-clock m-r-10"></i>10 min</span></p>
+                                            <p>Es mejor que prepares pulpas de fresa</p>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="dropdown drp-user">
-                                <a href="#!" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="feather icon-user"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right profile-notification">
-                                    <div class="pro-head">
-                                        <img src="{{ url_for('static', filename='/assets/images/user/avatar-1.jpg') }}" class="img-radius" alt="User-Profile-Image">
-                                        <span>John Doe</span>
-                                        <a href="/login" class="dud-logout" title="Logout">
-                                            <i class="feather icon-log-out"></i>
-                                        </a>
+                                </li>
+                                <li class="notification">
+                                    <div class="media">
+                                        <img class="img-radius"
+                                            src="{{ url_for('static', filename='/assets/images/user/avatar-1.jpg') }}"
+                                            alt="Generic placeholder image">
+                                        <div class="media-body">
+                                            <p><strong>Alerta de caducidad</strong><span class="n-time text-muted"><i
+                                                        class="icon feather icon-clock m-r-10"></i>12 min</span></p>
+                                            <p>La papa pronto se va a daÃ±ar</p>
+                                        </div>
                                     </div>
-                                    <ul class="pro-body">
-                                        <li><a href="/login" class="dropdown-item"><i class="feather icon-lock"></i> Cerrar Sesion</a></li>
-                                    </ul>
-                                </div>
+                                </li>
+                                <li class="notification">
+                                    <div class="media">
+                                        <img class="img-radius"
+                                            src="{{ url_for('static', filename='/assets/images/user/avatar-2.jpg') }}"
+                                            alt="Generic placeholder image">
+                                        <div class="media-body">
+                                            <p><strong>Alerta de stock</strong><span class="n-time text-muted"><i
+                                                        class="icon feather icon-clock m-r-10"></i>30 min</span></p>
+                                            <p>Compra mas manzanas</p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="noti-footer">
+                                <a href="#!">mirar todo</a>
                             </div>
-                        </li>
-                    </ul>
-                </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </header>
-<!-- [ Header ] end -->
+    <!-- [ Header ] end -->
 
-{% block mainContent %}
-<!-- AquÃ­ irÃ¡ el contenido especÃ­fico de cada pÃ¡gina -->
-{% endblock %}
+    {% block mainContent %}
+    <!-- AquÃ­ irÃ¡ el contenido especÃ­fico de cada pÃ¡gina -->
+    {% endblock %}
 
 
     <!-- Required Js -->
@@ -206,12 +227,12 @@
     <script src="{{ url_for('static', filename='assets/js/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/pcoded.min.js') }}"></script>
 
-<!-- Apex Chart -->
-<script src="{{ url_for('static', filename='assets/js/plugins/apexcharts.min.js') }}"></script>
+    <!-- Apex Chart -->
+    <script src="{{ url_for('static', filename='assets/js/plugins/apexcharts.min.js') }}"></script>
 
 
-<!-- custom-chart js -->
-<script src="{{ url_for('static', filename='assets/js/pages/dashboard-main.js') }}"></script>
+    <!-- custom-chart js -->
+    <script src="{{ url_for('static', filename='assets/js/pages/dashboard-main.js') }}"></script>
 </body>
 
 <!-- [ Footer ] start -->
@@ -221,7 +242,8 @@
             <!-- SecciÃ³n de InformaciÃ³n de la Empresa -->
             <div class="col-md-4">
                 <h5>Sobre Nosotros</h5>
-                <p>Somos una empresa comprometida con la optimizaciÃ³n de procesos y la innovaciÃ³n tecnolÃ³gica para el mejoramiento de la gestiÃ³n empresarial.</p>
+                <p>Somos una empresa comprometida con la optimizaciÃ³n de procesos y la innovaciÃ³n tecnolÃ³gica para el
+                    mejoramiento de la gestiÃ³n empresarial.</p>
             </div>
 
             <!-- SecciÃ³n de Enlaces RÃ¡pidos -->
@@ -258,5 +280,16 @@
         </div>
     </div>
 </footer>
+
+<script>
+    document.getElementById("botonCerrarSesion").addEventListener("click", function (event) {
+        event.preventDefault(); // Evita que el enlace siga su comportamiento por defecto
+        vaciarUserData();
+        window.location.href = '/login';
+    });
+</script>
+
+
 <!-- [ Footer ] end -->
+
 </html>

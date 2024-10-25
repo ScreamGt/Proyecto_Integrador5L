@@ -7,20 +7,18 @@
         <!-- Barra de búsqueda, filtro y botón -->
         <div class="row mb-4">
             <div class="col-md-4">
-                <!-- Formulario para buscar proveedores -->
                 <form id="searchForm">
                     <div class="input-group" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
                         <input type="text" class="form-control" id="searchInput" name="nombre" placeholder="Buscar un proveedor">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="button" id="searchButton" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                                <i class="fas fa-search"></i> <!-- Icono de lupa -->
+                                <i class="fas fa-search"></i>
                             </button>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="col-md-3">
-                <!-- Botón de Filtrar por Nombre con menú desplegable -->
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
                         Filtrar por Nombre
@@ -30,24 +28,25 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" id="addProveedorButton">
                 <a href="/addProveedores" class="btn btn-primary" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">Agregar Proveedor</a>
             </div>
         </div>
 
-        <!-- Botones debajo de la tabla -->
+        <!-- Botones de acción -->
         <div class="mt-3">
-            <button class="btn btn-warning" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                <i class="fas fa-sync-alt"></i> <!-- Icono de actualizar -->
-                Actualizar
+            <button class="btn btn-warning" id="updateButton" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                <i class="fas fa-sync-alt"></i> Actualizar
             </button>
-            <button class="btn btn-danger" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                <i class="fas fa-trash-alt"></i> <!-- Icono de eliminar -->
-                Eliminar
+            <button class="btn btn-primary" id="editButton" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); margin-left: 10px;">
+                <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="btn btn-danger" id="deleteButton" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); margin-left: 10px;">
+                <i class="fas fa-trash-alt"></i> Eliminar
             </button>
         </div>
 
-        <!-- Tabla con columna Dirección -->
+        <!-- Tabla de proveedores -->
         <div class="table-responsive mt-4" style="box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); border-radius: 8px;">
             <table class="table table-bordered">
                 <thead>
@@ -55,7 +54,6 @@
                         <th style="text-align:center;">Nombre</th>
                         <th style="text-align:center;">Teléfono</th>
                         <th style="text-align:center;">Dirección</th>
-                        <th style="text-align:center;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -67,28 +65,40 @@
 </div>
 <!-- [ Main Content ] end -->
 
-<!-- JavaScript para manejar la acción del botón de búsqueda -->
+<!-- JavaScript para manejar la acción del botón de búsqueda y editar fila -->
 <script>
     document.getElementById('searchButton').addEventListener('click', function() {
         const searchInput = document.getElementById('searchInput').value.trim();
-        let endpoint = '/proveedores/getAll';
+        let endpoint = '/proveedores/getAll?token=' + encodeURIComponent(userData['token']);
+
+        if (endpoint == "token no valido") {
+            localStorage.removeItem('userData');
+        }
         
         if (searchInput) {
-            endpoint = '/proveedores/getOne?nombre=' + encodeURIComponent(searchInput);
+            endpoint = '/proveedores/getOne?nombre=' + encodeURIComponent(searchInput) + '&token=' + encodeURIComponent(userData['token']);
         }
         
         fetch(endpoint)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la red: ' + response.status);
+                }
+                return response.json();
+            })
             .then(data => {
                 const tableBody = document.getElementById('tableBody');
-                tableBody.innerHTML = ''; // Limpia la tabla antes de agregar resultados
+                tableBody.innerHTML = '';
                 
-                // Si data es un array de proveedores (de getAll)
                 if (Array.isArray(data)) {
-                    data.forEach(proveedor => {
-                        tableBody.appendChild(createRow(proveedor));
-                    });
-                } else if (data) { // Si data es un único proveedor (de getOne)
+                    if (data.length === 0) {
+                        alert('No se encontraron proveedores.');
+                    } else {
+                        data.forEach(proveedor => {
+                            tableBody.appendChild(createRow(proveedor));
+                        });
+                    }
+                } else if (data) {
                     tableBody.appendChild(createRow(data));
                 } else {
                     alert('Proveedor no encontrado');
@@ -96,25 +106,101 @@
             })
             .catch(error => {
                 console.error('Error al obtener proveedores:', error);
+                alert('Ocurrió un error al obtener los proveedores.');
             });
     });
 
-    // Función para crear una fila de la tabla con los datos de un proveedor
+    document.addEventListener('DOMContentLoaded', function () {
+        const addProveedorButton = document.getElementById('addProveedorButton');
+        const updateButton = document.getElementById('updateButton');
+        const deleteButton = document.getElementById('deleteButton');
+        const editButton = document.getElementById('editButton');
+
+        if (userData['rol'] === 'administrador') {
+            addProveedorButton.style.display = 'inline-block';
+            updateButton.style.display = 'inline-block';
+            deleteButton.style.display = 'inline-block';
+            editButton.style.display = 'inline-block';
+        } else if (userData['rol'] === 'empleado') {
+            addProveedorButton.style.display = 'none';
+            updateButton.style.display = 'none';
+            deleteButton.style.display = 'none';
+            editButton.style.display = 'none';
+        }
+    });
+
     function createRow(proveedor) {
         const row = document.createElement('tr');
         
         row.innerHTML = `
             <td style="text-align:center;">${proveedor.nombre}</td>
-            <td style="text-align:center;">${proveedor.telefono}</td>
-            <td style="text-align:center;">${proveedor.direccion}</td>
-            <td style="text-align:center;">
-                <button class="btn btn-info btn-sm">
-                    <i class="fas fa-edit"></i>
-                </button>
-            </td>
+            <td style="text-align:center;" contenteditable="false">${proveedor.telefono}</td>
+            <td style="text-align:center;" contenteditable="false">${proveedor.direccion}</td>
         `;
-        
+
+        // Añadir evento de clic para seleccionar la fila
+        row.addEventListener('click', function() {
+            selectRow(row);
+        });
+
         return row;
     }
+
+    let selectedRow = null;
+
+    function selectRow(row) {
+        if (selectedRow) selectedRow.classList.remove('selected');
+        selectedRow = row;
+        selectedRow.classList.add('selected');
+    }
+
+    document.getElementById('editButton').addEventListener('click', function() {
+        if (!selectedRow) {
+            alert('Selecciona una fila para editar.');
+            return;
+        }
+
+        const cells = selectedRow.getElementsByTagName('td');
+        cells[1].contentEditable = "true";
+        cells[2].contentEditable = "true";
+        cells[1].focus();
+    });
+
+    document.getElementById('updateButton').addEventListener('click', function() {
+        if (!selectedRow) {
+            alert('Selecciona una fila para actualizar.');
+            return;
+        }
+
+        const cells = selectedRow.getElementsByTagName('td');
+        const nombre = cells[0].innerText;
+        const telefono = cells[1].innerText;
+        const direccion = cells[2].innerText;
+
+        fetch(`/proveedores/update?nombre=${encodeURIComponent(nombre)}&telefono=${encodeURIComponent(telefono)}&direccion=${encodeURIComponent(direccion)}&token=${encodeURIComponent(userData['token'])}`, {
+            method: 'POST'
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Error al actualizar.');
+            return response.json();
+        })
+        .then(() => {
+            alert('Proveedor actualizado exitosamente.');
+            document.getElementById('searchButton').click();
+        })
+        .catch(error => alert('Ocurrió un error al actualizar el proveedor.'));
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && selectedRow) {
+            const cells = selectedRow.getElementsByTagName('td');
+            cells[1].contentEditable = "false";
+            cells[2].contentEditable = "false";
+        }
+    });
 </script>
+
+<style>
+    .selected { background-color: #e0f7fa; }
+</style>
 {% endblock %}

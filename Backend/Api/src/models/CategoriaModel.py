@@ -1,118 +1,107 @@
 from database.db import get_connection
 from .entities.Categoria import Categoria
 
-class CategoriasModel:
+class CategoriaModel:
 
-    #Metodo para traer todos los categorias
+    #Metodo para traer todas las categorias 
     @classmethod
-    def get_Categorias(self):
+    def get_categorias(self):
         try:
             connection = get_connection()
             categorias = []
 
-            #Query y operacion para obtener los categorias
+            #Query y operacion para obtener las categorias
             with connection.cursor() as cursor:
-                cursor.execute("SELECT  * From categoria")
+                cursor.execute("SELECT  * From categoria where estado = 'activo'")
                 resultset = cursor.fetchall()
+                #print(resultset) para revisar si se recuperaron los datos de la BD
 
                 #Guardar categorias en la lista con formato JSON
                 for row in resultset:
-                    Categoria = Categoria(row[0], row[1], row[2])
-                    categorias.append(Categoria.to_JSON())
+                    categoria = Categoria(row[0], row[1], row[2])
+                    categorias.append(categoria.to_JSON())
 
             #Cerrar conexion BD
             connection.close()
-            return categorias
+            return categorias if categorias else False
         
         #Manejar en caso de Error
         except Exception as ex:
+            print(f"Error en get_categorias: {str(ex)}")  # Imprime el error en consola
             raise Exception(ex)
     
-    #Metodo para traer una categoria por un dato
-    # 'nombre'
+    # Método para traer categoria con un nombre parecido
     @classmethod
-    def get_categoria(self,nombre):
+    def get_categoria(self, nombre):
         try:
             connection = get_connection()
+            categorias = []
 
-            #Query y operacion para obtener la categoria segun su nombre
+            # Query para obtener categoria cuyo nombre sea parecido al dado
             with connection.cursor() as cursor:
-                cursor.execute("SELECT  id_categoria, categoria, estado, FROM categoria WHERE categoria = %s", (nombre,))
-                row = cursor.fetchone()
+                cursor.execute("""SELECT id_categoria, categoria, estado FROM categoria
+                    WHERE estado = 'activo' and categoria LIKE %s""", ('%' + nombre + '%',))
+                rows = cursor.fetchall()
+                print(rows)
 
-                #Guardar la categoria en la lista con formato JSON
-                categoria = None
-                if row != None :
-                    categoria = Categoria(row[0], row[1], row[2])
-                    categoria = categoria.to_JSON()
+                # Si se encontraron filas, convertir cada fila en un objeto categoria y luego a JSON
+                if rows:
+                    for row in rows:
+                        categoria = Categoria(row[0], row[1], row[2])
+                        categorias.append(categoria.to_JSON())
+                        print(categoria)
 
-            #Cerrar conexion BD
+            # Cerrar conexión a la BD
             connection.close()
-            return categoria
+
+            # Retornar la lista de categorias en formato JSON
+            return categorias if categorias else False
         
-        #Manejar en caso de Error
+        # Manejar en caso de error
         except Exception as ex:
+            print(f"Error en get_categoria: {str(ex)}")  # Imprime el error en consola
             raise Exception(ex)
+
 
     # Metodo para insertar una categoria en la BD
     @classmethod
-    def add_categoria(self, categoria):
+    def add_categoria(cls,nombre,estado):
         try:
             connection = get_connection()
 
-            # Query con procedimiento para insertar un categoria
+            # Query con procedimiento para insertar una categoria
             with connection.cursor() as cursor:
-                print(categoria.id_categoria, categoria.categoria,categoria.estado)
-                cursor.execute("CALL insertar_categoria(%s, %s)", (categoria.categoria, "activo" ))
-                affected_rows = cursor.rowcount
+                cursor.execute("CALL insertar_categoria(%s, %s)", (nombre, estado))
                 connection.commit()
 
             # Cerrar conexion BD y mostrar filas afectadas
             connection.close()
-            return affected_rows
+            return True
 
         # Manejar en caso de Error
         except Exception as ex:
+            print(f"Error en add_categoria: {str(ex)}")  # Imprime el error en consola
             raise Exception(ex)
 
-    # Metodo para modificar una categoria en la BD
+    
+
+    # Metodo para eliminar una categria en la BD
     @classmethod
-    def update_categoria(self, categoria):
+    def delete_categoria(csl,nombre, estado):
         try:
             connection = get_connection()
 
-            # Query con procedimiento para modificar la categoria
+            # Query con procedimiento para insertar una categoria
             with connection.cursor() as cursor:
-                print(categoria.id_categoria, categoria.categoria, categoria.estado)
-                cursor.execute("CALL actualizar_categoria(%s)", (print(categoria.categoria)))
-                affected_rows = cursor.rowcount
+                print(print(nombre))
+                cursor.execute("CALL eliminar_categoria(%s, %s)", (nombre, estado))
                 connection.commit()
 
             # Cerrar conexion BD y mostrar filas afectadas
             connection.close()
-            return affected_rows
+            return True
 
         # Manejar en caso de Error
         except Exception as ex:
-            raise Exception(ex)
-
-    # Metodo para eliminar una categoria en la BD
-    @classmethod
-    def delete_categoria(self, categoria):
-        try:
-            connection = get_connection()
-
-            # Query con procedimiento para insertar un proveedor
-            with connection.cursor() as cursor:
-                print(categoria.id_categoria, categoria.categoria, categoria.estado)
-                cursor.execute("CALL eliminar_categoria(%s, %s)", (categoria.categoria, "inactivo"))
-                affected_rows = cursor.rowcount
-                connection.commit()
-
-            # Cerrar conexion BD y mostrar filas afectadas
-            connection.close()
-            return affected_rows
-
-        # Manejar en caso de Error
-        except Exception as ex:
+            print(f"Error en delete_categoria: {str(ex)}")  # Imprime el error en consola
             raise Exception(ex)

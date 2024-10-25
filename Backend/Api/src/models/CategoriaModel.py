@@ -17,7 +17,7 @@ class CategoriasModel:
 
                 #Guardar categorias en la lista con formato JSON
                 for row in resultset:
-                    Categoria = Categoria(row[1], row[2])
+                    Categoria = Categoria(row[0], row[1], row[2])
                     categorias.append(Categoria.to_JSON())
 
             #Cerrar conexion BD
@@ -37,7 +37,7 @@ class CategoriasModel:
 
             #Query y operacion para obtener la categoria segun su nombre
             with connection.cursor() as cursor:
-                cursor.execute("SELECT  categoria, estado, FROM categoria WHERE categoria = %s", (nombre,))
+                cursor.execute("SELECT  id_categoria, categoria, estado, FROM categoria WHERE categoria = %s", (nombre,))
                 row = cursor.fetchone()
 
                 #Guardar la categoria en la lista con formato JSON
@@ -104,7 +104,7 @@ class CategoriasModel:
 
             # Query con procedimiento para insertar un proveedor
             with connection.cursor() as cursor:
-                #print(print(proveedor.nombre, proveedor.telefono, proveedor.direccion, proveedor.estado))
+                print(categoria.id_categoria, categoria.categoria, categoria.estado)
                 cursor.execute("CALL eliminar_categoria(%s, %s)", (categoria.categoria, "inactivo"))
                 affected_rows = cursor.rowcount
                 connection.commit()

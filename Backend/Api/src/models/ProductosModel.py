@@ -17,7 +17,7 @@ class ProductosModel:
 
                 #Guardar productos en la lista con formato JSON
                 for row in resultset:
-                    producto = Productos(row[1], row[2], row[3], row[4])
+                    producto = Productos(row[0], row[1], row[2], row[3], row[4])
                     productos.append(producto.to_JSON())
 
             #Cerrar conexion BD
@@ -37,13 +37,13 @@ class ProductosModel:
 
             #Query y operacion para obtener el producto segun su nombre
             with connection.cursor() as cursor:
-                cursor.execute("SELECT  nombre, precio_libra, estado FROM productos WHERE nombre = %s", (nombre,))
+                cursor.execute("SELECT codigo_producto, nombre, precio_libra, estado FROM productos WHERE nombre = %s", (nombre,))
                 row = cursor.fetchone()
 
                 #Guardar el producto en la lista con formato JSON
                 producto = None
                 if row != None :
-                    producto = Productos(row[1], row[2], row[3])
+                    producto = Productos(row[0], row[1], row[2], row[3])
                     producto = producto.to_JSON()
 
             #Cerrar conexion BD

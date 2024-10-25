@@ -17,7 +17,7 @@ class ProveedoresModel:
 
                 #Guardar proveedores en la lista con formato JSON
                 for row in resultset:
-                    proveedor = Proveedores(row[1], row[2], row[3], row[4])
+                    proveedor = Proveedores(row[0], row[1], row[2], row[3], row[4])
                     proveedores.append(proveedor.to_JSON())
 
             #Cerrar conexion BD
@@ -37,13 +37,13 @@ class ProveedoresModel:
 
             #Query y operacion para obtener el proveedor segun su nombre
             with connection.cursor() as cursor:
-                cursor.execute("SELECT  nombre_empresa, telefono, direccion, estado FROM proveedores WHERE nombre_empresa = %s", (nombre,))
+                cursor.execute("SELECT  id_proveedores, nombre_empresa, telefono, direccion, estado FROM proveedores WHERE nombre_empresa = %s", (nombre,))
                 row = cursor.fetchone()
 
                 #Guardar el proveedor en la lista con formato JSON
                 proveedor = None
                 if row != None :
-                    proveedor = Proveedores(row[1], row[2], row[3], row[4])
+                    proveedor = Proveedores(row[0], row[1], row[2], row[3], row[4])
                     proveedor = proveedor.to_JSON()
 
             #Cerrar conexion BD

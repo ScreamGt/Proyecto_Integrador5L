@@ -1,91 +1,120 @@
 {% extends "menu_plantilla.html" %}
 {% block title %}Inicio | Fruber{% endblock %}
 {% block mainContent %}
-    <!-- [ Main Content ] start -->
-    <div class="pcoded-main-container">
-        <div class="pcoded-content">
-            <!-- Barra de búsqueda, filtro y botón -->
-            <div class="row mb-4">
-                <div class="col-md-4">
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- Barra de búsqueda, filtro y botón -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <!-- Formulario para buscar proveedores -->
+                <form id="searchForm">
                     <div class="input-group" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                        <input type="text" class="form-control" placeholder="Buscar un proveedor">
+                        <input type="text" class="form-control" id="searchInput" name="nombre" placeholder="Buscar un proveedor">
                         <div class="input-group-append">
-                            <button class="btn btn-primary" type="button" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                            <button class="btn btn-primary" type="button" id="searchButton" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
                                 <i class="fas fa-search"></i> <!-- Icono de lupa -->
                             </button>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <!-- Botón de Filtrar por Nombre con menú desplegable -->
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                            Filtrar por Nombre
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Filtrar por Nombre</a>
-                        </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <!-- Botón de Filtrar por Nombre con menú desplegable -->
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                        Filtrar por Nombre
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">Filtrar por Nombre</a>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <a href="/addProveedores" class="btn btn-primary" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">Agregar Proveedor</a>
-                </div>
             </div>
-
-			<!-- Botones debajo de la tabla -->
-            <div class="mt-3">
-                <button class="btn btn-warning" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                    <i class="fas fa-sync-alt"></i> <!-- Icono de actualizar -->
-                    Actualizar
-                </button>
-                <button class="btn btn-danger" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                    <i class="fas fa-trash-alt"></i> <!-- Icono de eliminar -->
-                    Eliminar
-                </button>
+            <div class="col-md-3">
+                <a href="/addProveedores" class="btn btn-primary" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">Agregar Proveedor</a>
             </div>
+        </div>
 
-            <!-- Tabla con columna Dirección -->
-            <div class="table-responsive mt-4" style="box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); border-radius: 8px;">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th style="text-align:center;">Nombre</th>
-                            <th style="text-align:center;">Teléfono</th>
-                            <th style="text-align:center;">Dirección</th>
-                            <th style="text-align:center;">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Fila de ejemplo 1 -->
-                        <tr>
-                            <td style="text-align:center;">Michel Contreras</td>
-                            <td style="text-align:center;">32115879647</td>
-                            <td style="text-align:center;">Calle 123 #45-67</td>
-                            <td style="text-align:center;">
-                                <button class="btn btn-info btn-sm">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </td>
-                        </tr>
+        <!-- Botones debajo de la tabla -->
+        <div class="mt-3">
+            <button class="btn btn-warning" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                <i class="fas fa-sync-alt"></i> <!-- Icono de actualizar -->
+                Actualizar
+            </button>
+            <button class="btn btn-danger" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                <i class="fas fa-trash-alt"></i> <!-- Icono de eliminar -->
+                Eliminar
+            </button>
+        </div>
 
-                        <!-- Fila de ejemplo 2 -->
-                        <tr>
-                            <td style="text-align:center;">Jennyfer Garcia</td>
-                            <td style="text-align:center;">3114569872</td>
-                            <td style="text-align:center;">Carrera 8 #10-23</td>
-                            <td style="text-align:center;">
-                                <button class="btn btn-info btn-sm">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            
+        <!-- Tabla con columna Dirección -->
+        <div class="table-responsive mt-4" style="box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); border-radius: 8px;">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;">Nombre</th>
+                        <th style="text-align:center;">Teléfono</th>
+                        <th style="text-align:center;">Dirección</th>
+                        <th style="text-align:center;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
+            </table>
         </div>
     </div>
-    <!-- [ Main Content ] end -->
+</div>
+<!-- [ Main Content ] end -->
 
-	{% endblock %}
+<!-- JavaScript para manejar la acción del botón de búsqueda -->
+<script>
+    document.getElementById('searchButton').addEventListener('click', function() {
+        const searchInput = document.getElementById('searchInput').value.trim();
+        let endpoint = '/proveedores/getAll';
+        
+        if (searchInput) {
+            endpoint = '/proveedores/getOne?nombre=' + encodeURIComponent(searchInput);
+        }
+        
+        fetch(endpoint)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('tableBody');
+                tableBody.innerHTML = ''; // Limpia la tabla antes de agregar resultados
+                
+                // Si data es un array de proveedores (de getAll)
+                if (Array.isArray(data)) {
+                    data.forEach(proveedor => {
+                        tableBody.appendChild(createRow(proveedor));
+                    });
+                } else if (data) { // Si data es un único proveedor (de getOne)
+                    tableBody.appendChild(createRow(data));
+                } else {
+                    alert('Proveedor no encontrado');
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener proveedores:', error);
+            });
+    });
+
+    // Función para crear una fila de la tabla con los datos de un proveedor
+    function createRow(proveedor) {
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+            <td style="text-align:center;">${proveedor.nombre}</td>
+            <td style="text-align:center;">${proveedor.telefono}</td>
+            <td style="text-align:center;">${proveedor.direccion}</td>
+            <td style="text-align:center;">
+                <button class="btn btn-info btn-sm">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </td>
+        `;
+        
+        return row;
+    }
+</script>
+{% endblock %}

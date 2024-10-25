@@ -42,7 +42,7 @@ def add_proveedor():
         success = ProveedoresModel.add_proveedor(nombre, telefono, direccion, estado)
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
-        if success:  
+        if success :  
             return jsonify({'message': 'Proveedor agregado exitosamente'})
         else:
             return jsonify({'message': "Ningun Proveedor Agregado"}), 404
@@ -58,13 +58,12 @@ def update_proveedor():
         telefono = request.form.get('telefono')
         nombre = request.form.get('nombre')
         direccion = request.form.get('direccion')
-        estado = request.form.get('estado', "activo")  # Valor por defecto
 
-        success = ProveedoresModel.update_proveedor(telefono, nombre, direccion, estado)
+        success = ProveedoresModel.update_proveedor(nombre, telefono, direccion)
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
-        if success == 1:  
-            return jsonify({'message': 'Proveedor actualizado exitosamente'}),
+        if success :  
+            return jsonify({'message': 'Proveedor actualizado exitosamente'}),200
         else:
             return jsonify({'message': "Ningun Proveedor actualizado"}), 500
     
@@ -72,15 +71,16 @@ def update_proveedor():
         return jsonify({'message': str(ex)}), 500
 
 #Ruta para eliminar un proveedor de la BD
-@main.route('/delete', methods=['DELETE'])
+@main.route('/delete', methods=['POST'])
 def delete_proveedor():
     try:
         # Recibir datos desde el formulario HTTP POST
-        proveedor = request.form.get('nombre')
-        affected_rows = ProveedoresModel.delete_proveedor(proveedor)
+        nombre = request.form.get('nombre')
+        estado = request.form.get('estado', "inactivo")  # Valor por defecto
+        success = ProveedoresModel.delete_proveedor(nombre, estado)
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
-        if affected_rows == 1:  
+        if success:  
             return jsonify({'message': 'Proveedor Eliminado'}), 
         else:
             return jsonify({'message': "Ningun Proveedor eliminado"}), 404

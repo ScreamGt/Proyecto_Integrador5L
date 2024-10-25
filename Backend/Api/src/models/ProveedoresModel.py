@@ -12,7 +12,7 @@ class ProveedoresModel:
 
             #Query y operacion para obtener los proveedores
             with connection.cursor() as cursor:
-                cursor.execute("SELECT  * From proveedores")
+                cursor.execute("SELECT  * From proveedores where estado = 'activo'")
                 resultset = cursor.fetchall()
                 #print(resultset) para revisar si se recuperaron los datos de la BD
 
@@ -40,7 +40,7 @@ class ProveedoresModel:
             # Query para obtener proveedores cuyo nombre sea parecido al dado
             with connection.cursor() as cursor:
                 cursor.execute("""SELECT id_proveedores, nombre_empresa, telefono, direccion, estado FROM proveedores
-                    WHERE nombre_empresa LIKE %s""", ('%' + nombre + '%',))
+                    WHERE estado = 'activo' and nombre_empresa LIKE %s""", ('%' + nombre + '%',))
                 rows = cursor.fetchall()
                 print(rows)
 
@@ -66,7 +66,6 @@ class ProveedoresModel:
     # Metodo para insertar un proveedor en la BD
     @classmethod
     def add_proveedor(cls,nombre,telefono,direccion,estado):
-        print("Se accedió a la ruta /add")
         try:
             connection = get_connection()
 
@@ -86,42 +85,35 @@ class ProveedoresModel:
 
     # Método para modificar un proveedor en la BD
     @classmethod
-    def update_proveedor(cls, nombre, telefono, direccion, estado):
+    def update_proveedor(cls, nombre, telefono, direccion):
         try:
             connection = get_connection()
 
             # Query con procedimiento para actualizar un proveedor
             with connection.cursor() as cursor:
                 print(nombre, telefono, direccion)
-                cursor.execute("CALL modificar_proveedor(%s, %s, %s, %s)", (nombre, telefono, direccion, estado))
-                affected_rows = cursor.rowcount 
+                cursor.execute("CALL modificar_proveedor(%s, %s, %s)", (nombre, telefono, direccion))
                 connection.commit()
 
             # Cerrar conexión
             connection.close()
-
-            # Verificar si se actualizó alguna fila y retornar un mensaje descriptivo
-            if affected_rows > 0:
-                return {'success': True, 'message': 'Proveedor actualizado correctamente'}
-            else:
-                return {'success': False, 'message': 'No se encontró el proveedor para actualizar'}
-
+            return True
+        
         # Manejar en caso de Error
         except Exception as ex:
             print(f"Error en update_proveedores: {str(ex)}")  # Imprime el error en consola
-            raise Exception(ex)
 
 
     # Metodo para eliminar un proveedo en la BD
     @classmethod
-    def delete_proveedor(self, proveedor):
+    def delete_proveedor(csl,nombre,estado):
         try:
             connection = get_connection()
 
             # Query con procedimiento para insertar un proveedor
             with connection.cursor() as cursor:
-                print(print(proveedor.nombre, proveedor.telefono, proveedor.direccion, proveedor.estado))
-                cursor.execute("CALL eliminar_proveedor(%s)", (proveedor.nombre, "inactivo"))
+                print(print(nombre,estado))
+                cursor.execute("CALL eliminar_proveedor(%s, %s)", (nombre, estado))
                 connection.commit()
 
             # Cerrar conexion BD y mostrar filas afectadas

@@ -65,13 +65,13 @@ class ProductosModel:
 
     # Metodo para insertar un producto en la BD
     @classmethod
-    def add_producto(cls,codigo_producto,nombre,precio_libra,estado,nombre_categoria):
+    def add_producto(cls,nombre,precio_libra,estado,nombre_categoria):
         try:
             connection = get_connection()
 
             # Query con procedimiento para insertar un producto
             with connection.cursor() as cursor:
-                cursor.execute("CALL insertar_producto(%s, %s, %s, %s, %s)", (codigo_producto, nombre, precio_libra, estado, nombre_categoria))
+                cursor.execute("CALL insertar_proveedor(%s, %s, %s, %s)", (nombre, precio_libra, estado, nombre_categoria))
                 connection.commit()
 
             # Cerrar conexion BD y mostrar filas afectadas
@@ -106,14 +106,14 @@ class ProductosModel:
 
     # Metodo para eliminar un producto en la BD
     @classmethod
-    def delete_producto(csl,nombre):
+    def delete_producto(csl,nombre,estado):
         try:
             connection = get_connection()
 
             # Query con procedimiento para insertar un proveedor
             with connection.cursor() as cursor:
-                print(print(nombre))
-                cursor.execute("CALL eliminar_producto(%s)", (nombre))
+                print(print(nombre,estado))
+                cursor.execute("CALL eliminar_proveedor(%s, %s)", (nombre, estado))
                 connection.commit()
 
             # Cerrar conexion BD y mostrar filas afectadas
@@ -122,5 +122,5 @@ class ProductosModel:
 
         # Manejar en caso de Error
         except Exception as ex:
-            print(f"Error en delete_producto: {str(ex)}")  # Imprime el error en consola
+            print(f"Error en delete_proveedores: {str(ex)}")  # Imprime el error en consola
             raise Exception(ex)

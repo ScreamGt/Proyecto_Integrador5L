@@ -12,7 +12,10 @@
                     </a>
 
                     <!-- Formulario para agregar proveedor -->
-                    <form action="/proveedores/add" method="POST">
+                    <form id = "Add_proveedor" method="POST">
+                        <!-- Campo oculto para el token -->
+                        <input type="hidden" name="token" id="tokenInput"> <!-- Campo vacío que se llenará con JavaScript -->
+
                         <!-- Primera fila con 2 campos: Nombre del Proveedor y Teléfono -->
                         <div class="row">
                             <!-- Campo Nombre del Proveedor -->
@@ -54,4 +57,36 @@
         </div>
     </div>
     <!-- [ Main Content ] end -->
+
+    <script>
+        document.getElementById('Add_proveedor').addEventListener('submit', function (e) {
+		e.preventDefault(); // Evitar que el formulario se envíe de forma predeterminada
+
+		// recupera los valores que en el formulario
+		const formData = new FormData(this);
+		// ----------------------------------------
+		fetch('/proveedores/add?token=' + encodeURIComponent(userData['token']), {
+			method: 'POST',
+			body: formData, // Enviar los datos como FormData
+		})
+
+			.then(response => response.json())
+			.then(data => {
+				if (data.status === 'succesfull') {
+                    alert("creado correctamente");
+				}
+                else if(data.status === "token no valido"){
+                        vaciarUserData();
+                        window.location.href = '/login';
+                }
+                else {
+					alert('Ningun Proveedor Agregado');
+				}
+			})
+			.catch(error => {
+				console.error('Error during login:', error);
+			});
+	});
+    </script>
+     
 {% endblock %}

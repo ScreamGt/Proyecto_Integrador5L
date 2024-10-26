@@ -47,21 +47,18 @@ def add_proveedor():
             nombre = request.form.get('nombre')
             telefono = request.form.get('telefono')
             direccion = request.form.get('direccion')
-            estado = request.form.get('estado', "activo")  # Valor por defecto
-            print(nombre, telefono, direccion, estado)
 
-            success = ProveedoresModel.add_proveedor(nombre, telefono, direccion, estado)
+            success = ProveedoresModel.add_proveedor(nombre, telefono, direccion, "activo")
 
             # Mensaje para mirar si fue exitoso los cambios en la BD
             if success :  
-                return jsonify({'message': 'Proveedor agregado exitosamente'})
+                return jsonify({'status': 'succesfull'})
             else:
-                return jsonify({'message': "Ningun Proveedor Agregado"}), 404
-        
+                return jsonify({'status': "Ningun Proveedor Agregado"}), 404
         except Exception as ex:
-            return jsonify({'message': str(ex)}), 500
+            return jsonify({'status': str(ex)}), 500
     else:
-        return jsonify({'message': "token no valido"}), 500
+        return jsonify({'status': "token no valido"})
 
 #Ruta para actualizar un Proveedor
 @main.route('/update', methods=['POST'])
@@ -70,9 +67,9 @@ def update_proveedor():
     if ValidarToken.validar_token(token) == "administrador":
         try:
             # Recibir datos desde el formulario HTTP POST
-            telefono = request.form.get('telefono')
-            nombre = request.form.get('nombre')
-            direccion = request.form.get('direccion')
+            nombre = request.args.get('nombre')
+            telefono = request.args.get('telefono')
+            direccion = request.args.get('direccion')
 
             success = ProveedoresModel.update_proveedor(nombre, telefono, direccion)
 
@@ -94,9 +91,8 @@ def delete_proveedor():
     if ValidarToken.validar_token(token) == "administrador":
         try:
             # Recibir datos desde el formulario HTTP POST
-            nombre = request.form.get('nombre')
-            estado = request.form.get('estado', "inactivo")  # Valor por defecto
-            success = ProveedoresModel.delete_proveedor(nombre, estado)
+            nombre = request.args.get('nombre')
+            success = ProveedoresModel.delete_proveedor(nombre, "inactivo")
 
             # Mensaje para mirar si fue exitoso los cambios en la BD
             if success:  

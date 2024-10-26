@@ -71,9 +71,9 @@
         const searchInput = document.getElementById('searchInput').value.trim();
         let endpoint = '/proveedores/getAll?token=' + encodeURIComponent(userData['token']);
 
-        //if (endpoint == "token no valido") {
-          //  localStorage.removeItem('userData');
-        //}
+        if (endpoint == "token no valido") {
+            localStorage.removeItem('userData');
+        }
         
         if (searchInput) {
             endpoint = '/proveedores/getOne?nombre=' + encodeURIComponent(searchInput) + '&token=' + encodeURIComponent(userData['token']);
@@ -172,10 +172,10 @@
             return;
         }
 
-        const cells = selectedRow.getElementsByTagName('td');
-        const nombre = cells[0].innerText;
-        const telefono = cells[1].innerText;
-        const direccion = cells[2].innerText;
+        var cells = selectedRow.getElementsByTagName('td');
+        var nombre = cells[0].innerText;
+        var telefono = cells[1].innerText;
+        var direccion = cells[2].innerText;
 
         fetch(`/proveedores/update?nombre=${encodeURIComponent(nombre)}&telefono=${encodeURIComponent(telefono)}&direccion=${encodeURIComponent(direccion)}&token=${encodeURIComponent(userData['token'])}`, {
             method: 'POST'
@@ -189,6 +189,29 @@
             document.getElementById('searchButton').click();
         })
         .catch(error => alert('Ocurrió un error al actualizar el proveedor.'));
+    });
+
+    document.getElementById('deleteButton').addEventListener('click', function() {
+        if (!selectedRow) {
+            alert('Selecciona una fila para eliminar.');
+            return;
+        }
+
+        var cells = selectedRow.getElementsByTagName('td');
+        var nombre = cells[0].innerText;
+
+        fetch(`/proveedores/delete?nombre=${encodeURIComponent(nombre)}&token=${encodeURIComponent(userData['token'])}`, {
+            method: 'POST'
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Error al eliminar.');
+            return response.json();
+        })
+        .then(() => {
+            alert('Proveedor eliminado exitosamente.');
+            document.getElementById('searchButton').click();
+        })
+        .catch(error => alert('Ocurrió un error al eliminar el proveedor.'));
     });
 
     document.addEventListener('keydown', function(e) {

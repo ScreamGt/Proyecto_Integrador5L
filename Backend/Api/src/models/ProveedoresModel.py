@@ -81,7 +81,7 @@ class ProveedoresModel:
         # Manejar en caso de Error
         except Exception as ex:
             print(f"Error en add_proveedores: {str(ex)}")  # Imprime el error en consola
-            raise Exception(ex)
+            return False
 
     # Método para modificar un proveedor en la BD
     @classmethod
@@ -102,7 +102,7 @@ class ProveedoresModel:
         # Manejar en caso de Error
         except Exception as ex:
             print(f"Error en update_proveedores: {str(ex)}")  # Imprime el error en consola
-
+            return False
 
     # Metodo para eliminar un proveedo en la BD
     @classmethod

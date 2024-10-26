@@ -26,7 +26,7 @@ def get_catgoria():
             nombre = request.args.get('nombre')
             if not nombre:  # Comprobar si el nombre está vacío
                 return jsonify({'message': 'El nombre es requerido'}), 400 
-            categorias = CategoriaModel.get_categoiria(nombre)
+            categorias = CategoriaModel.get_categoria(nombre)
             # Si no se encuentran categorias, puedes retornar un mensaje específico
             if not categorias:
                 return jsonify({'message': 'No se encontraron categoriaas'}), 404
@@ -61,7 +61,7 @@ def add_categoria():
         return jsonify({'message': "token no valido"}), 500
 
 
-#Ruta para eliminar un proveedor de la BD
+#Ruta para eliminar una categoria de la BD
 @main.route('/delete', methods=['POST'])
 def delete_categoria():
     token = request.args.get('token')
@@ -69,8 +69,7 @@ def delete_categoria():
         try:
             # Recibir datos desde el formulario HTTP POST
             nombre = request.form.get('nombre')
-            estado = request.form.get('estado', "inactivo")  # Valor por defecto
-            success = CategoriaModel.delete_categoria(nombre, estado)
+            success = CategoriaModel.delete_categoria(nombre)
 
             # Mensaje para mirar si fue exitoso los cambios en la BD
             if success:  

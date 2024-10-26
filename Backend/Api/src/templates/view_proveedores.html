@@ -71,9 +71,9 @@
         const searchInput = document.getElementById('searchInput').value.trim();
         let endpoint = '/proveedores/getAll?token=' + encodeURIComponent(userData['token']);
 
-        if (endpoint == "token no valido") {
-            localStorage.removeItem('userData');
-        }
+        //if (endpoint == "token no valido") {
+          //  localStorage.removeItem('userData');
+        //}
         
         if (searchInput) {
             endpoint = '/proveedores/getOne?nombre=' + encodeURIComponent(searchInput) + '&token=' + encodeURIComponent(userData['token']);

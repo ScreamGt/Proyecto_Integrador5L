@@ -87,14 +87,14 @@ class CategoriaModel:
 
     # Metodo para eliminar una categria en la BD
     @classmethod
-    def delete_categoria(csl,nombre, estado):
+    def delete_categoria(csl,nombre):
         try:
             connection = get_connection()
 
             # Query con procedimiento para insertar una categoria
             with connection.cursor() as cursor:
                 print(print(nombre))
-                cursor.execute("CALL eliminar_categoria(%s, %s)", (nombre, estado))
+                cursor.execute("CALL eliminar_categoria(%s)", (nombre))
                 connection.commit()
 
             # Cerrar conexion BD y mostrar filas afectadas

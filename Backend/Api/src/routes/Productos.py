@@ -33,10 +33,12 @@ def add_producto():
         # Recibir datos desde el formulario HTTP
         codigo_producto = request.form.get('codigo_producto')
         nombre = request.form.get('nombre')
-        direccion = request.form.get('direccion')
+        precio_libra = request.form.get('precio_libra')
+        estado = request.form.get('estado', "activo")
+        nombre_categoria = request.form.get('nombre_categoria')
 
         # Crear el producto con los datos recibidos
-        producto = Productos(codigo_producto, nombre, direccion)
+        producto = Productos(codigo_producto,nombre, precio_libra, estado, nombre_categoria)
         affected_rows = ProductosModel.add_proveedor(producto)
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
@@ -53,12 +55,12 @@ def add_producto():
 def update_producto():
     try:
         # Recibir datos desde el formulario HTTP POST
-        telefono = request.form.get('telefono')
         nombre = request.form.get('nombre')
-        direccion = request.form.get('direccion')
+        precio_libra = request.form.get('precio_libra')
+        nombre_categoria = request.form.get('nombre_categoria')
 
         # Crear el producto con los datos recibidos
-        producto = Productos(telefono, nombre, direccion)
+        producto = Productos(nombre, precio_libra, nombre_categoria)
         affected_rows = ProductosModel.update_producto(producto)
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
@@ -70,19 +72,19 @@ def update_producto():
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
 
-#Ruta para eliminar un proveedor de la BD
+#Ruta para eliminar un producto de la BD
 @main.route('/delete', methods=['DELETE'])
-def delete_proveedor():
+def delete_producto():
     try:
         # Recibir datos desde el formulario HTTP POST
-        proveedor = request.form.get('nombre')
-        affected_rows = ProductosModel.delete_proveedor(proveedor)
+        nombre = request.form.get('nombre')
+        affected_rows = ProductosModel.delete_producto(nombre)
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
         if affected_rows == 1:  
-            return jsonify({'message': 'Proveedor Eliminado'}), 
+            return jsonify({'message': 'Producto Eliminado'}), 
         else:
-            return jsonify({'message': "Ningun Proveedor eliminado"}), 404
+            return jsonify({'message': "Ningun producto eliminado"}), 404
     
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500

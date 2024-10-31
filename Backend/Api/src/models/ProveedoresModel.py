@@ -12,7 +12,7 @@ class ProveedoresModel:
 
             #Query y operacion para obtener los proveedores
             with connection.cursor() as cursor:
-                cursor.execute("SELECT  * From proveedores where estado = 'activo'")
+                cursor.execute("SELECT  * From proveedores where Lower(estado) = Lower('activo')")
                 resultset = cursor.fetchall()
                 #print(resultset) para revisar si se recuperaron los datos de la BD
 
@@ -40,7 +40,7 @@ class ProveedoresModel:
             # Query para obtener proveedores cuyo nombre sea parecido al dado
             with connection.cursor() as cursor:
                 cursor.execute("""SELECT id_proveedores, nombre_empresa, telefono, direccion, estado FROM proveedores
-                    WHERE estado = 'activo' and nombre_empresa LIKE %s""", ('%' + nombre + '%',))
+                    WHERE Lower(estado) = Lower('activo') and nombre_empresa LIKE %s""", ('%' + nombre + '%',))
                 rows = cursor.fetchall()
                 print(rows)
 

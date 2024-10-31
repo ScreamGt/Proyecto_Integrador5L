@@ -12,7 +12,7 @@ class CategoriaModel:
 
             #Query y operacion para obtener las categorias
             with connection.cursor() as cursor:
-                cursor.execute("SELECT  * From categoria where estado = 'activo'")
+                cursor.execute("SELECT  * From categoria where Lower(estado) = Lower('activo')")
                 resultset = cursor.fetchall()
                 #print(resultset) para revisar si se recuperaron los datos de la BD
 
@@ -40,7 +40,7 @@ class CategoriaModel:
             # Query para obtener categoria cuyo nombre sea parecido al dado
             with connection.cursor() as cursor:
                 cursor.execute("""SELECT id_categoria, categoria, estado FROM categoria
-                    WHERE estado = 'activo' and categoria LIKE %s""", ('%' + nombre + '%',))
+                    WHERE Lower(estado) = Lower('activo') and categoria LIKE %s""", ('%' + nombre + '%',))
                 rows = cursor.fetchall()
                 print(rows)
 
@@ -87,18 +87,20 @@ class CategoriaModel:
 
     # Metodo para eliminar una categria en la BD
     @classmethod
-    def delete_categoria(csl,nombre, estado):
+    def delete_categoria(csl,nombre):
+        print("entro al get")
         try:
             connection = get_connection()
 
             # Query con procedimiento para insertar una categoria
             with connection.cursor() as cursor:
                 print(print(nombre))
-                cursor.execute("CALL eliminar_categoria(%s, %s)", (nombre, estado))
+                cursor.execute("CALL eliminar_categoria(%s)", (nombre,))
                 connection.commit()
 
             # Cerrar conexion BD y mostrar filas afectadas
             connection.close()
+            print("Termino la consulta")
             return True
 
         # Manejar en caso de Error

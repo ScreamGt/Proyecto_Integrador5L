@@ -6,6 +6,7 @@ class EmpleadoModel:
     #Metodo para traer todos los empleados
     @classmethod
     def get_empleados(self):
+        print("entro al get")
         try:
             connection = get_connection()
             empleados = []

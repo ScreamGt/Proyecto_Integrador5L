@@ -42,7 +42,7 @@ def add_empleado():
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
         if affected_rows == 1:  
-            return jsonify({'message': 'Empleado agregado exitosamente'}),
+            return jsonify({'message': 'Empleado agregado exitosamente'})
         else:
             return jsonify({'message': "Ningun Empleado Agregado"}), 404
     
@@ -65,7 +65,7 @@ def update_empleado():
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
         if affected_rows == 1:  
-            return jsonify({'message': 'Empleado actualizado exitosamente'}),
+            return jsonify({'message': 'Empleado actualizado exitosamente'})
         else:
             return jsonify({'message': "Ningun Empleado actualizado"}), 500
     
@@ -82,7 +82,7 @@ def delete_empleado():
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
         if affected_rows == 1:  
-            return jsonify({'message': 'Empleado Eliminado'}), 
+            return jsonify({'message': 'Empleado Eliminado'})
         else:
             return jsonify({'message': "Ningun Empleado eliminado"}), 404
     

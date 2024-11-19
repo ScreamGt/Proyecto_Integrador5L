@@ -61,7 +61,7 @@ def add_proveedor():
         return jsonify({'status': "token no valido"})
 
 #Ruta para actualizar un Proveedor
-@main.route('/update', methods=['POST'])
+@main.route('/update', methods=['PUT'])
 def update_proveedor():
     token = request.args.get('token')
     if ValidarToken.validar_token(token) == "administrador":
@@ -85,7 +85,7 @@ def update_proveedor():
         return jsonify({'message': "token no valido"}), 500
 
 #Ruta para eliminar un proveedor de la BD
-@main.route('/delete', methods=['POST'])
+@main.route('/delete', methods=['PUT'])
 def delete_proveedor():
     token = request.args.get('token')
     if ValidarToken.validar_token(token) == "administrador":

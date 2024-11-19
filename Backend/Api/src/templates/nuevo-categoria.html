@@ -10,31 +10,27 @@
                     <a href="/categoria" class="btn btn-light" style="background-color: #f0f0f0; color: #333;">
                         <i class="feather icon-arrow-left"></i> VOLVER
                     </a>
-                    <form>
-                        <!-- Primera fila con 2 campos: Nombre del Proveedor y Teléfono -->
+
+                    <!-- Formulario para agregar categoría -->
+                    <form id="Add_categoria" method="POST">
+                        <!-- Campo oculto para el token -->
+                        <input type="hidden" name="token" id="tokenInput"> <!-- Campo vacío que se llenará con JavaScript -->
+
+                        <!-- Primera fila con 2 campos: Nombre de la Categoría y Estado -->
                         <div class="row">
-                            <!-- Campo Nombre de la categoria -->
+                            <!-- Campo Nombre de la Categoría -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="nombreProveedor">Categoria</label>
-                                    <input type="text" class="form-control" id="categoria" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                </div>
-                            </div>
-                            <!-- Campo estado -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="telefono">Estado</label>
-                                    <input type="tel" class="form-control" id="estado" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                                    <label for="categoria">Categoría</label>
+                                    <input type="text" class="form-control" id="categoria" name="categoria" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                                 </div>
                             </div>
                         </div>
 
-
-
-                        <!-- Botón Agregar Proveedor -->
+                        <!-- Botón Agregar Categoría -->
                         <div class="text-center mt-4">
                             <button type="submit" class="btn" style="background-color: #008080; color: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                Agregar Categoria
+                                Agregar Categoría
                             </button>
                         </div>
                     </form>
@@ -44,4 +40,33 @@
     </div>
     <!-- [ Main Content ] end -->
 
-	{% endblock %}
+    <script>
+        document.getElementById('Add_categoria').addEventListener('submit', function (e) {
+            e.preventDefault(); // Evitar que el formulario se envíe de forma predeterminada
+
+            // Recupera los valores que en el formulario
+            const formData = new FormData(this);
+            // Enviar los datos con el token incluido
+            fetch('/categoria/add?token=' + encodeURIComponent(userData['token']), {
+                method: 'POST',
+                body: formData, // Enviar los datos como FormData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'succesfull') {
+                        alert("Categoría  Agregada correctamente");
+                    }
+                    else if(data.status === "token no valido"){
+                        vaciarUserData();
+                        window.location.href = '/login';
+                    }
+                    else {
+                        alert('Categoría Agregada');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al agregar categoría:', error);
+                });
+        });
+    </script>
+{% endblock %}

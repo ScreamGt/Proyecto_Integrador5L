@@ -1,90 +1,96 @@
 from flask import Blueprint , jsonify, request
 from models.ProductosModel import ProductosModel
-from models.entities.Productos import Productos
+from routes import ValidarToken
 
 main = Blueprint('productos_blueprint', __name__)
 
 # Ruta para traer todos los producto
 @main.route('/getAll')
 def get_productos():
-    try:
-        productos = ProductosModel.get_productos()
-        return jsonify(productos)
-    except Exception as ex:
-        return jsonify({'message' : str(ex)}) , 500
+    token = request.args.get('token')
+    if ValidarToken.validar_token(token):
+        try:
+            productos = ProductosModel.get_productos()
+            return jsonify(productos)
+        except Exception as ex:
+            return jsonify({'message' : str(ex)}) , 500
+    else:
+        return jsonify({'message': "token no valido"}), 500
 
 #Ruta para traer un producto por su nombre
-@main.route('/getOne')
+@main.route('/getOne', methods=['GET'])
 def get_producto():
-    try:
-        nombre = request.form.get('nombre')
-        producto = ProductosModel.get_producto(nombre)
-        if producto != None:
-            return jsonify(producto)
-        else:
-            return jsonify(None)
-    except Exception as ex:
-        return jsonify({'message' : str(ex)}) , 500
+    token = request.args.get('token')
+    if ValidarToken.validar_token(token):
+        try:
+            nombre = request.args.get('nombre')
+            productos = ProductosModel.get_producto(nombre)
+
+            if productos != None:
+                return jsonify(productos)
+            else:
+                return jsonify(None)
+        except Exception as ex:
+            return jsonify({'message' : str(ex)}) , 500
 
 #Ruta para agregar un producto a la BD 
 @main.route('/add', methods=['POST'])
 def add_producto():
-    try:
-        # Recibir datos desde el formulario HTTP
-        codigo_producto = request.form.get('codigo_producto')
-        nombre = request.form.get('nombre')
-        precio_libra = request.form.get('precio_libra')
-        estado = request.form.get('estado', "activo")
-        nombre_categoria = request.form.get('nombre_categoria')
+    token = request.args.get('token')
+    if ValidarToken.validar_token(token):
+        try:
+            # Recibir datos desde el formulario HTTP
+            codigo_producto = request.form.get('codigo_producto')
+            nombre = request.form.get('nombre')
+            precio_libra = request.form.get('precio_libra')
+            nombre_categoria = request.form.get('nombre_categoria')
 
-        # Crear el producto con los datos recibidos
-        producto = Productos(codigo_producto, nombre, precio_libra, estado, nombre_categoria)
-        affected_rows = ProductosModel.add_proveedor(producto)
+            # Crear el producto con los datos recibidos
+            Sucess = ProductosModel.add_producto(codigo_producto, nombre, precio_libra, 'activo', nombre_categoria)
 
-        # Mensaje para mirar si fue exitoso los cambios en la BD
-        if affected_rows == 1:  
-            return jsonify({'message': 'Producto agregado exitosamente'}),
-        else:
-            return jsonify({'message': "Ningun Producto Agregado"}), 404
+            # Mensaje para mirar si fue exitoso los cambios en la BD
+            if Sucess:  
+                return jsonify({'message': 'Producto agregado exitosamente'})
+            else:
+                return jsonify({'message': "Ningun Producto Agregado"}), 404
     
-    except Exception as ex:
-        return jsonify({'message': str(ex)}), 500
+        except Exception as ex:
+            return jsonify({'message': str(ex)}), 500
 
 #Ruta para actualizar un Producto
 @main.route('/update', methods=['PUT'])
 def update_producto():
     try:
         # Recibir datos desde el formulario HTTP POST
-        nombre = request.form.get('nombre')
-        precio_libra = request.form.get('precio_libra')
-        nombre_categoria = request.form.get('nombre_categoria')
+        nombre = request.args.get('nombre')
+        precio_libra = request.args.get('precio_libra')
+        nombre_categoria = request.args.get('nombre_categoria')
 
         # Crear el producto con los datos recibidos
-        producto = Productos(nombre, precio_libra, nombre_categoria)
-        affected_rows = ProductosModel.update_producto(producto)
+        Sucess = ProductosModel.update_producto(nombre, precio_libra, nombre_categoria)
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
-        if affected_rows == 1:  
-            return jsonify({'message': 'Producto actualizado exitosamente'}),
+        if Sucess:  
+            return jsonify({'message': 'Producto actualizado exitosamente'})
         else:
             return jsonify({'message': "Ningun Producto actualizado"}), 500
     
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
 
-#Ruta para eliminar un proveedor de la BD
-@main.route('/delete', methods=['DELETE'])
+#Ruta para eliminar un producto de la BD
+@main.route('/delete', methods=['PUT'])
 def delete_proveedor():
     try:
         # Recibir datos desde el formulario HTTP POST
-        proveedor = request.form.get('nombre')
-        affected_rows = ProductosModel.delete_proveedor(proveedor)
+        nombre = request.args.get('nombre')
+        affected_rows = ProductosModel.delete_producto(nombre)
 
         # Mensaje para mirar si fue exitoso los cambios en la BD
         if affected_rows == 1:  
-            return jsonify({'message': 'Proveedor Eliminado'}), 
+            return jsonify({'message': 'Producto Eliminado'})
         else:
-            return jsonify({'message': "Ningun Proveedor eliminado"}), 404
+            return jsonify({'message': "Ningun Producto eliminado"}), 404
     
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500

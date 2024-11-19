@@ -40,7 +40,7 @@ class ProveedoresModel:
             # Query para obtener proveedores cuyo nombre sea parecido al dado
             with connection.cursor() as cursor:
                 cursor.execute("""SELECT id_proveedores, nombre_empresa, telefono, direccion, estado FROM proveedores
-                    WHERE Lower(estado) = Lower('activo') and nombre_empresa LIKE %s""", ('%' + nombre + '%',))
+                    WHERE Lower(estado) = Lower('activo') and Lower(nombre_empresa) LIKE Lower(%s)""", ('%' + nombre + '%',))
                 rows = cursor.fetchall()
                 print(rows)
 
@@ -110,7 +110,7 @@ class ProveedoresModel:
         try:
             connection = get_connection()
 
-            # Query con procedimiento para insertar un proveedor
+            # Query con procedimiento para eliminar un proveedor
             with connection.cursor() as cursor:
                 print(print(nombre,estado))
                 cursor.execute("CALL eliminar_proveedor(%s, %s)", (nombre, estado))

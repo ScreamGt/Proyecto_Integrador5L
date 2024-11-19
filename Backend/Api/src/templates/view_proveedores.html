@@ -178,7 +178,7 @@
         var direccion = cells[2].innerText;
 
         fetch(`/proveedores/update?nombre=${encodeURIComponent(nombre)}&telefono=${encodeURIComponent(telefono)}&direccion=${encodeURIComponent(direccion)}&token=${encodeURIComponent(userData['token'])}`, {
-            method: 'POST'
+            method: 'PUT'
         })
         .then(response => {
             if (!response.ok) throw new Error('Error al actualizar.');
@@ -201,7 +201,7 @@
         var nombre = cells[0].innerText;
 
         fetch(`/proveedores/delete?nombre=${encodeURIComponent(nombre)}&token=${encodeURIComponent(userData['token'])}`, {
-            method: 'POST'
+            method: 'PUT'
         })
         .then(response => {
             if (!response.ok) throw new Error('Error al eliminar.');
@@ -222,8 +222,9 @@
         }
     });
 </script>
+<!-- End JavaScript  -->
 
 <style>
-    .selected { background-color: #e0f7fa; }
+    .selected { background-color: #edf7f8; }
 </style>
 {% endblock %}

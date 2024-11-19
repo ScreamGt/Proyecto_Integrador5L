@@ -14,7 +14,6 @@ class CategoriaModel:
             with connection.cursor() as cursor:
                 cursor.execute("SELECT  * From categoria where Lower(estado) = Lower('activo')")
                 resultset = cursor.fetchall()
-                #print(resultset) para revisar si se recuperaron los datos de la BD
 
                 #Guardar categorias en la lista con formato JSON
                 for row in resultset:
@@ -40,7 +39,7 @@ class CategoriaModel:
             # Query para obtener categoria cuyo nombre sea parecido al dado
             with connection.cursor() as cursor:
                 cursor.execute("""SELECT id_categoria, categoria, estado FROM categoria
-                    WHERE Lower(estado) = Lower('activo') and categoria LIKE %s""", ('%' + nombre + '%',))
+                    WHERE Lower(estado) = Lower('activo') and Lower(categoria) LIKE Lower(%s)""", ('%' + nombre + '%',))
                 rows = cursor.fetchall()
                 print(rows)
 
@@ -62,7 +61,6 @@ class CategoriaModel:
             print(f"Error en get_categoria: {str(ex)}")  # Imprime el error en consola
             raise Exception(ex)
 
-
     # Metodo para insertar una categoria en la BD
     @classmethod
     def add_categoria(cls,nombre,estado):
@@ -83,16 +81,13 @@ class CategoriaModel:
             print(f"Error en add_categoria: {str(ex)}")  # Imprime el error en consola
             raise Exception(ex)
 
-    
-
     # Metodo para eliminar una categria en la BD
     @classmethod
     def delete_categoria(csl,nombre):
-        print("entro al get")
         try:
             connection = get_connection()
 
-            # Query con procedimiento para insertar una categoria
+            # Query con procedimiento para eliminar una categoria
             with connection.cursor() as cursor:
                 print(print(nombre))
                 cursor.execute("CALL eliminar_categoria(%s)", (nombre,))
@@ -100,7 +95,6 @@ class CategoriaModel:
 
             # Cerrar conexion BD y mostrar filas afectadas
             connection.close()
-            print("Termino la consulta")
             return True
 
         # Manejar en caso de Error

@@ -12,9 +12,9 @@ class ProductosModel:
 
             #Query y operacion para obtener los productos
             with connection.cursor() as cursor:
-                cursor.execute("SELECT  * From productos where Lower(estado) = Lower('activo')")
+                cursor.execute("""SELECT p.codigo_producto,p.nombre,p.precio_libra,p.estado,c.categoria AS nombre_categoria FROM productos p 
+                               JOIN categoria c ON p.id_categoria = c.id_categoria WHERE LOWER(p.estado) = LOWER('activo')""")
                 resultset = cursor.fetchall()
-                #print(resultset) para revisar si se recuperaron los datos de la BD
 
                 #Guardar productos en la lista con formato JSON
                 for row in resultset:
@@ -32,17 +32,16 @@ class ProductosModel:
     
     # Método para traer productos con un nombre parecido
     @classmethod
-    def get_producto(self, nombre):
+    def get_producto_nombre(self, nombre):
         try:
             connection = get_connection()
             productos = []
 
             # Query para obtener productos cuyo nombre sea parecido al dado
             with connection.cursor() as cursor:
-                cursor.execute("""SELECT codigo_producto, nombre, precio_libra, estado, id_categoria FROM productos
-                    WHERE Lower(estado) = Lower('activo') and Lower(nombre) LIKE Lower(%s)""", ('%' + nombre + '%',))
+                cursor.execute("""SELECT p.codigo_producto,p.nombre,p.precio_libra,p.estado,c.categoria AS nombre_categoria FROM productos p 
+                               JOIN categoria c ON p.id_categoria = c.id_categoria WHERE LOWER(p.estado) = LOWER('activo') AND LOWER(p.nombre) LIKE LOWER(%s)""", ('%' + nombre + '%',))
                 rows = cursor.fetchall()
-                print(rows)
 
                 # Si se encontraron filas, convertir cada fila en un objeto productos y luego a JSON
                 if rows:
@@ -60,14 +59,44 @@ class ProductosModel:
         
         # Manejar en caso de error
         except Exception as ex:
-            print(f"Error en get_producto: {str(ex)}")  # Imprime el error en consola
+            print(f"Error en get_producto_nombre: {str(ex)}")  # Imprime el error en consola
             raise Exception(ex)
+        
+    # Método para traer productos con una categoria en concreto
+    @classmethod
+    def get_producto_categoria(self, nombre_categoria):
+        try:
+            connection = get_connection()
+            productos = []
 
+            # Query para obtener productos cuyo nombre sea parecido al dado
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT p.codigo_producto,p.nombre,p.precio_libra,p.estado,c.categoria AS nombre_categoria FROM productos p 
+                               JOIN categoria c ON p.id_categoria = c.id_categoria WHERE LOWER(p.estado) = LOWER('activo') AND LOWER(c.categoria) LIKE LOWER(%s)""", ('%' + nombre_categoria + '%',))
+                rows = cursor.fetchall()
+
+                # Si se encontraron filas, convertir cada fila en un objeto productos y luego a JSON
+                if rows:
+                    for row in rows:
+                        producto = Productos(row[0], row[1], row[2], row[3], row[4])
+                        productos.append(producto.to_JSON())
+                        print(producto)
+
+            # Cerrar conexión a la BD
+            connection.close()
+            print("termino consulta")
+
+            # Retornar la lista de productos en formato JSON
+            return productos if productos else False
+        
+        # Manejar en caso de error
+        except Exception as ex:
+            print(f"Error en get_producto_categoria: {str(ex)}")  # Imprime el error en consola
+            raise Exception(ex)
 
     # Metodo para insertar un producto en la BD
     @classmethod
     def add_producto(cls, codigo_producto, nombre ,precio_libra, estado, nombre_categoria):
-        print("entro al add")
         try:
             connection = get_connection()
 
@@ -78,7 +107,6 @@ class ProductosModel:
 
             # Cerrar conexion BD y mostrar filas afectadas
             connection.close()
-            print("termino consulta")
             return True
 
         # Manejar en caso de Error

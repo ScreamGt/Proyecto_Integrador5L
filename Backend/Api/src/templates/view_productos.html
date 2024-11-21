@@ -1,5 +1,5 @@
 {% extends "menu_plantilla.html" %}
-{% block title %}Inicio | Fruber{% endblock %}
+{% block title %}Inicio | Productos{% endblock %}
 {% block mainContent %}
 <!-- [ Main Content ] start -->
 <div class="pcoded-main-container">
@@ -9,7 +9,7 @@
             <div class="col-md-4">
                 <form id="searchForm">
                     <div class="input-group" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                        <input type="text" class="form-control" id="searchInput" name="nombre" placeholder="Buscar Producto">
+                        <input type="text" class="form-control" id="searchInput" name="nombre" placeholder="Buscar un producto">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="button" id="searchButton" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
                                 <i class="fas fa-search"></i>
@@ -21,10 +21,11 @@
             <div class="col-md-3">
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                        Filtrar por Nombre
+                        Filtrar por: <span id="filterText">Nombre</span>
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Filtrar por Nombre</a>
+                    <div class="dropdown-menu" id="filtro" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#" data-value="nombre">Nombre</a>
+                        <a class="dropdown-item" href="#" data-value="categoria">Categoría</a>
                     </div>
                 </div>
             </div>
@@ -65,20 +66,37 @@
 </div>
 <!-- [ Main Content ] end -->
 
-<!-- JavaScript para manejar la acción del botón de búsqueda y editar fila -->
+<!-- JavaScript para manejar las funcionalidades -->
 <script>
+    let currentFilter = 'nombre'; // Filtro por defecto
+
+    // Manejar clic en opciones del dropdown
+    document.getElementById('filtro').addEventListener('click', function(event) {
+        const target = event.target;
+        if (target && target.matches('.dropdown-item')) {
+            currentFilter = target.getAttribute('data-value');
+            document.getElementById('filterText').innerText = target.innerText;
+        }
+    });
+    
+    // Modificar el endpoint en el botón de búsqueda según el filtro
     document.getElementById('searchButton').addEventListener('click', function() {
         const searchInput = document.getElementById('searchInput').value.trim();
-        let endpoint = '/productos/getAll?token=' + encodeURIComponent(userData['token']);
-
-        if (!userData['token']) {
-            alert('Token no válido');
-            localStorage.removeItem('userData');
-            return;
-        }
+        let endpoint;
 
         if (searchInput) {
-            endpoint = '/productos/getOne?nombre=' + encodeURIComponent(searchInput) + '&token=' + encodeURIComponent(userData['token']);
+            if (currentFilter === 'nombre') {
+                endpoint = '/productos/getOne_name?nombre=' + encodeURIComponent(searchInput) + '&token=' + encodeURIComponent(userData['token']);
+            } else if (currentFilter === 'categoria') {
+                endpoint = '/productos/getOne_categ?nombre_categoria=' + encodeURIComponent(searchInput) + '&token=' + encodeURIComponent(userData['token']);
+            }
+        } else {
+            endpoint = '/productos/getAll?token=' + encodeURIComponent(userData['token']);
+        }
+
+        if (endpoint === "token no valido") {
+            localStorage.removeItem('userData');
+            return;
         }
 
         fetch(endpoint)
@@ -125,19 +143,20 @@
             editButton.style.display = 'inline-block';
         } else if (userData['rol'] === 'empleado') {
             addProductoButton.style.display = 'none';
-            updateButton.style.display = 'inline-block';
+            updateButton.style.display = 'none';
             deleteButton.style.display = 'none';
-            editButton.style.display = 'inline-block';
+            editButton.style.display = 'none';
         }
     });
 
     function createRow(producto) {
         const row = document.createElement('tr');
-
-        row.innerHTML = 
-            `<td style="text-align:center;">${producto.nombre}</td>
-            <td style="text-align:center;" contenteditable="false">${producto.precio}</td>
-            <td style="text-align:center;" contenteditable="false">${producto.categoria}</td>`;
+        
+        row.innerHTML = `
+            <td style="text-align:center;">${producto.nombre}</td>
+            <td style="text-align:center;" contenteditable="false">${producto.precio_libra}</td>
+            <td style="text-align:center;" contenteditable="false">${producto.nombre_categoria}</td>
+        `;
 
         row.addEventListener('click', function() {
             selectRow(row);
@@ -174,10 +193,10 @@
 
         const cells = selectedRow.getElementsByTagName('td');
         const nombre = cells[0].innerText;
-        const precio = cells[1].innerText;
-        const categoria = cells[2].innerText;
+        const precio_libra = cells[1].innerText;
+        const nombre_categoria = cells[2].innerText;
 
-        fetch(`/productos/update?nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&categoria=${encodeURIComponent(categoria)}&token=${encodeURIComponent(userData['token'])}`, {
+        fetch(`/productos/update?nombre=${encodeURIComponent(nombre)}&precio_libra=${encodeURIComponent(precio_libra)}&nombre_categoria=${encodeURIComponent(nombre_categoria)}&token=${encodeURIComponent(userData['token'])}`, {
             method: 'PUT'
         })
         .then(response => {
@@ -201,7 +220,7 @@
         const nombre = cells[0].innerText;
 
         fetch(`/productos/delete?nombre=${encodeURIComponent(nombre)}&token=${encodeURIComponent(userData['token'])}`, {
-            method: 'DELETE'
+            method: 'PUT'
         })
         .then(response => {
             if (!response.ok) throw new Error('Error al eliminar.');
@@ -214,27 +233,6 @@
         .catch(error => alert('Ocurrió un error al eliminar el producto.'));
     });
 
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && selectedRow) {
-            const cells = selectedRow.getElementsByTagName('td');
-            const nombre = cells[0].innerText;
-            const precio = cells[1].innerText;
-            const categoria = cells[2].innerText;
-
-            fetch(`/productos/update?nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&categoria=${encodeURIComponent(categoria)}&token=${encodeURIComponent(userData['token'])}`, {
-                method: 'PUT'
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Error al actualizar.');
-                return response.json();
-            })
-            .then(() => {
-                alert('Producto actualizado exitosamente.');
-                document.getElementById('searchButton').click();
-            })
-            .catch(error => alert('Ocurrió un error al actualizar el producto.'));
-        }
-    });
 </script>
 
 <style>

@@ -18,13 +18,29 @@ def get_productos():
         return jsonify({'message': "token no valido"}), 500
 
 #Ruta para traer un producto por su nombre
-@main.route('/getOne', methods=['GET'])
-def get_producto():
+@main.route('/getOne_name', methods=['GET'])
+def get_producto_nombre():
     token = request.args.get('token')
     if ValidarToken.validar_token(token):
         try:
             nombre = request.args.get('nombre')
-            productos = ProductosModel.get_producto(nombre)
+            productos = ProductosModel.get_producto_nombre(nombre)
+
+            if productos != None:
+                return jsonify(productos)
+            else:
+                return jsonify(None)
+        except Exception as ex:
+            return jsonify({'message' : str(ex)}) , 500
+        
+#Ruta para traer un producto por su categoria
+@main.route('/getOne_categ', methods=['GET'])
+def get_producto_categoria():
+    token = request.args.get('token')
+    if ValidarToken.validar_token(token):
+        try:
+            nombre_categoria = request.args.get('nombre_categoria')
+            productos = ProductosModel.get_producto_categoria(nombre_categoria)
 
             if productos != None:
                 return jsonify(productos)

@@ -2,7 +2,7 @@
 # from utils.DateFormat import DateFormat
 
 class Proveedores:
-    #constructor empleado
+    #constructor proveedores
     def __init__(self, id_proveedores, nombre = None, telefono = None, direccion = None, estado = None) -> None:
         self.id_proveedores = id_proveedores
         self.nombre = nombre

@@ -10,41 +10,46 @@
                     <a href="/productos" class="btn btn-light" style="background-color: #f0f0f0; color: #333;">
                         <i class="feather icon-arrow-left"></i> VOLVER
                     </a>
-                    <form>
-                        <!-- Primer fila con 2 campos -->
+
+                    <!-- Formulario para agregar producto -->
+                    <form id="Add_producto" method="POST">
+                        <!-- Campo oculto para el token -->
+                        <input type="hidden" name="token" id="tokenInput"> <!-- Campo vacío que se llenará con JavaScript -->
+
+                        <!-- Primera fila con 2 campos: Código del Producto y Nombre -->
                         <div class="row">
-                            <!-- Campo codigo del Producto -->
+                            <!-- Campo Código del Producto -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="codigoProducto">Codigo del producto</label>
-                                    <input type="text" class="form-control" id="codigo_producto" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                                    <label for="codigoProducto">Código del Producto</label>
+                                    <input type="text" class="form-control" id="codigo_producto" name="codigo_producto" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                                 </div>
                             </div>
                             <!-- Campo Nombre del Producto -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="nombreProducto">Nombre del producto</label>
-                                    <input type="text" class="form-control" id="nombre" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                                    <label for="nombreProducto">Nombre del Producto</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                                 </div>
                             </div>
-                            
                         </div>
 
-                        <!-- Segunda fila con 1 campo: Categoría -->
+                        <!-- Segunda fila con 2 campos: Precio por Libra y Categoría -->
                         <div class="row">
                             <!-- Campo Precio por Libra -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="precioLibra">Precio por libra</label>
-                                    <input type="text" class="form-control" id="precio_libra" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                                    <label for="precioLibra">Precio por Libra</label>
+                                    <input type="text" class="form-control" id="precio_libra" name="precio_libra" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                                 </div>
                             </div>
+                            <!-- Campo Categoría -->
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="categoria">Categoría</label>
-                                    <select class="form-control" id="nombre_categoria" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                        <option value="Fruta">Fruta</option>
-                                        <option value="Verdura">Verdura</option>
+                                    <select class="form-control" id="nombre_categoria" name="nombre_categoria" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                                        <option value="Frutas">Fruta</option>
+                                        <option value="Verduras">Verdura</option>
                                     </select>
                                 </div>
                             </div>
@@ -63,5 +68,31 @@
     </div>
     <!-- [ Main Content ] end -->
 
+    <script>
+        document.getElementById('Add_producto').addEventListener('submit', function (e) {
+            e.preventDefault(); // Evitar que el formulario se envíe de forma predeterminada
 
+            // Recuperar los valores del formulario
+            const formData = new FormData(this);
+            // ----------------------------------------
+            fetch('/productos/add?token=' + encodeURIComponent(userData['token']), {
+                method: 'POST',
+                body: formData, // Enviar los datos como FormData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'succesfull') {
+                    alert("Producto creado correctamente");
+                } else if (data.status === "token no valido") {
+                    vaciarUserData();
+                    window.location.href = '/login';
+                } else {
+                    alert('Producto Agregado');
+                }
+            })
+            .catch(error => {
+                console.error('Error al agregar producto:', error);
+            });
+        });
+    </script>
 {% endblock %}

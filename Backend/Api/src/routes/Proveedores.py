@@ -16,6 +16,8 @@ def get_proveedores():
             return jsonify({'message' : str(ex)}) , 500
     else:
         return jsonify({'message': "token no valido"}), 500
+    
+
 
 # Ruta para traer a proveedores por su nombre
 @main.route('/getOne', methods=['GET'])

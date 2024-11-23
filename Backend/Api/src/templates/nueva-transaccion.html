@@ -1,83 +1,81 @@
 {% extends "menu_plantilla.html" %}
 {% block title %}Inicio | Fruber{% endblock %}
 {% block mainContent %}
-    <!-- [ Main Content ] start -->
-    <div class="pcoded-main-container">
-        <div class="pcoded-content">
-            <div class="card">
-                <div class="card-body">
-                    <!-- Botón de volver con un color gris claro -->
-                    <a href="/" class="btn btn-light" style="background-color: #f0f0f0; color: #333;">
-                        <i class="feather icon-arrow-left"></i> VOLVER
-                    </a>
-                    <form>
-                        <!-- Primer fila con 2 campos: Fecha Actual y Lote -->
-                        <div class="row">
-                            <!-- Lote -->
-                            <div class="col-md-6">
-                                <label for="lote">Lote</label>
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+        <div class="card">
+            <div class="card-body">
+                <!-- Botón de volver con un color gris claro -->
+                <a href="/" class="btn btn-light" style="background-color: #f0f0f0; color: #333;">
+                    <i class="feather icon-arrow-left"></i> VOLVER
+                </a>
+                <form id="Add_venta">
+                    <!-- Primer fila con 2 campos: Fecha Actual y Lote -->
+                    <div class="row">
+                        <!-- Lote -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nombreProducto">Nombre del Producto</label>
                                 <div class="input-group" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                    <input type="text" id="lote" class="form-control" placeholder="">
+                                    <input type="text" class="form-control" id="nombreProducto" placeholder=""
+                                        style="border-radius: 0; ">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Peso en Kg -->
-                            <div class="col-md-6">
-                                <label for="peso">Peso en Kg</label>
-                                <input type="text" id="peso" class="form-control" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                            </div>
-                        </div>
-
-                        <!-- Segunda fila con 2 campos: Peso en Kg y Fecha de Caducidad -->
-                        <div class="row mt-3">
-                            <!-- Fecha de Caducidad -->
-                            <div class="col-md-6">
-                                <label for="fecha-caducidad">Fecha Caducidad</label>
-                                <input type="date" id="fecha-caducidad" class="form-control" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                            </div>
-                            <!-- Proveedor -->
-                            <div class="col-md-6">
-                                <label for="proveedor">Proveedor</label>
-                                <div class="input-group" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                    <input type="text" id="proveedor" class="form-control" placeholder="">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            style="border-radius: 0;">
                                             <i class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Tercera fila con Proveedor y campos de búsqueda -->
-                        <div class="row mt-3">
-                            <!-- Búsqueda de Producto -->
-                            <div class="col-md-6">
-                                <label for="producto">Producto</label>
-                                <div class="input-group" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                    <input type="text" id="producto" class="form-control" placeholder="">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                        <!-- Peso en Kg -->
+                        <div class="col-md-6">
+                            <label for="peso">Peso en Kg</label>
+                            <input type="text" id="peso" class="form-control" placeholder=""
+                                style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                         </div>
+                    </div>
 
-                        <!-- Botón de Registro -->
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-primary" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">Registrar Lote</button>
-                        </div>
-                    </form>
-                </div>
+                    <!-- Botón de Registro -->
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary"
+                            style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">Registrar venta</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
 <!-- [ Main Content ] end -->
+
+
+<script>
+    document.getElementById('Add_venta').addEventListener('submit', function (e) {
+        e.preventDefault(); // Evitar que el formulario se envíe de forma predeterminada
+
+        // Recuperar los valores del formulario
+        const formData = new FormData(this);
+        // ----------------------------------------
+        fetch('/ventas/add?token=' + encodeURIComponent(userData['token']), {
+            method: 'POST',
+            body: formData, // Enviar los datos como FormData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'succesfull') {
+                    alert("Venta creada correctamente");
+                } else if (data.status === "token no valido") {
+                    vaciarUserData();
+                    window.location.href = '/login';
+                } else {
+                    alert('Venta Agregado');
+                }
+            })
+            .catch(error => {
+                console.error('Error al agregar venta:', error);
+            });
+    });
+</script>
 {% endblock %}

@@ -32,14 +32,15 @@ class LoteModel:
     
     # Método para traer lotes con el nombre del produto o con el estado del lote
     @classmethod
-    def get_lote(self, nombre, estado_lote):
+    def get_lote_estado(self, estado_lote):
         try:
             connection = get_connection()
             lotes = []
 
-            # Query para obtener lotes cuyo nombre o estado sea parecido al dado
+            # Query para obtener lotes cuyo estado sea parecido al dado
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM ver_lotes_filtrado(%s, %s)", (nombre, estado_lote))
+                cursor.execute("""SELECT l.id_lote, TO_CHAR(l.fecha_llegada, 'DD-MM-YYYY')::VARCHAR, l.estado_lote, TO_CHAR(l.fecha_caducidad, 'DD-MM-YYYY')::VARCHAR, l.peso, l.precio, l.estado, p.nombre, pro.nombre_empresa FROM lote l 
+                                JOIN productos p ON l.codigo_producto = p.codigo_producto JOIN proveedores pro ON l.id_proveedores = pro.id_proveedores WHERE LOWER(estado_lote) LIKE LOWER(%s) """, ('%' + estado_lote + '%',))
                 rows = cursor.fetchall()
                 print(rows)
 
@@ -61,6 +62,38 @@ class LoteModel:
             print(f"Error en get_lote: {str(ex)}")  # Imprime el error en consola
             raise Exception(ex)
 
+
+# Método para traer lotes con el nombre del produto
+    @classmethod
+    def get_lote_nombre(self, nombre_producto):
+        try:
+            connection = get_connection()
+            lotes = []
+
+            # Query para obtener lotes cuyo nombre o estado sea parecido al dado
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT l.id_lote, TO_CHAR(l.fecha_llegada, 'DD-MM-YYYY')::VARCHAR, l.estado_lote, TO_CHAR(l.fecha_caducidad, 'DD-MM-YYYY')::VARCHAR, l.peso, l.precio, l.estado, p.nombre, pro.nombre_empresa FROM lote l 
+                                JOIN productos p ON l.codigo_producto = p.codigo_producto JOIN proveedores pro ON l.id_proveedores = pro.id_proveedores  WHERE LOWER(l.estado) LIKE LOWER('activo') AND LOWER(p.nombre) LIKE LOWER(%s)""", ('%' + nombre_producto + '%',))
+                rows = cursor.fetchall()
+                print(rows)
+
+                # Si se encontraron filas, convertir cada fila en un objeto Lote y luego a JSON
+                if rows:
+                    for row in rows:
+                        lote = Lote(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+                        lotes.append(lote.to_JSON())
+                        print(lote)
+
+            # Cerrar conexión a la BD
+            connection.close()
+
+            # Retornar la lista de los lotes en formato JSON
+            return lotes if lotes else False
+        
+        # Manejar en caso de error
+        except Exception as ex:
+            print(f"Error en get_lote: {str(ex)}")  # Imprime el error en consola
+            raise Exception(ex)
 
     # Metodo para insertar un lote en la BD
     @classmethod

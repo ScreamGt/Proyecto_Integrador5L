@@ -28,11 +28,11 @@
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                        Filtrar por
+                        Filtrar por: <span id="filterText">Nombre</span>
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a id="estado"  class="dropdown-item" data-value="estado" href="#">Estado</a>
-                        <a id="nombre_producto" class="dropdown-item" data-value="nombre_producto" href="#">Producto</a>
+                    <div class="dropdown-menu" id="filtro" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#" data-value="nombre_producto">Nombre del Producto</a>
+                        <a class="dropdown-item" href="#" data-value="estado_lote">Estado</a>
                     </div>
                 </div>
             </div>
@@ -87,18 +87,36 @@
 <!-- [ Main Content ] end -->
 
 <script>
+
+    let currentFilter = 'nombre'; // Filtro por defecto
+
+    // Manejar clic en opciones del dropdown
+    document.getElementById('filtro').addEventListener('click', function (event) {
+        const target = event.target;
+        if (target && target.matches('.dropdown-item')) {
+            currentFilter = target.getAttribute('data-value');
+            document.getElementById('filterText').innerText = target.innerText;
+        }
+    });
+
     var selectedRow = null;
     document.getElementById('searchButton').addEventListener('click', function () {
         const searchInput = document.getElementById('searchInput').value.trim();
-        let endpoint = '/lote/getAll?token=' + encodeURIComponent(userData['token']);
+        let endpoint;
 
         if (endpoint == "token no valido") {
             localStorage.removeItem('userData');
         }
 
         if (searchInput) {
-            // revisar esto que deje comentado
-            endpoint = '/lote/getOne?nombre_=' + encodeURIComponent(searchInput) + '&token=' + encodeURIComponent(userData['token']);
+            if (currentFilter === 'nombre_producto') {
+                endpoint = '/lote/getOne_name?nombre_producto=' + encodeURIComponent(searchInput) + '&token=' + encodeURIComponent(userData['token']);
+            } else if (currentFilter === 'estado_lote') {
+                endpoint = '/lote/getOne_estado?estado_lote=' + encodeURIComponent(searchInput) + '&token=' + encodeURIComponent(userData['token']);
+            }
+        } else {
+            endpoint = '/lote/getAll?token=' + encodeURIComponent(userData['token']);
+
         }
         function createRow(lote) {
             const row = document.createElement('tr');

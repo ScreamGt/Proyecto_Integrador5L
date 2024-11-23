@@ -29,6 +29,8 @@ class ProveedoresModel:
         except Exception as ex:
             print(f"Error en get_proveedores: {str(ex)}")  # Imprime el error en consola
             raise Exception(ex)
+        
+
     
     # Método para traer proveedores con un nombre parecido
     @classmethod
@@ -61,6 +63,7 @@ class ProveedoresModel:
         except Exception as ex:
             print(f"Error en get_proveedor: {str(ex)}")  # Imprime el error en consola
             raise Exception(ex)
+
 
 
     # Metodo para insertar un proveedor en la BD

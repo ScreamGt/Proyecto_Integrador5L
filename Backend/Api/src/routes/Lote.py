@@ -1,5 +1,6 @@
-from flask import Blueprint , jsonify, request
+from flask import Blueprint , jsonify, request, render_template
 from models.LoteModel import LoteModel
+from models.ProveedoresModel import ProveedoresModel
 from routes import ValidarToken
 
 main = Blueprint('lote_blueprint', __name__)
@@ -17,49 +18,65 @@ def get_lotes():
     else:
         return jsonify({'message': "token no valido"}), 500
 
-# Ruta para traer a proveedores por su nombre
-@main.route('/getOne', methods=['GET'])
-def get_lote():
+#Ruta para traer un lote por el nombre del producto
+@main.route('/getOne_name', methods=['GET'])
+def get_lote_nombre():
     token = request.args.get('token')
     if ValidarToken.validar_token(token):
         try:
-            nombre = request.args.get('nombre')
-            estado_lote = request.args.get()
-            if not nombre:  # Comprobar si el nombre está vacío
-                return jsonify({'message': 'Ingresa el nombre del producto o el estado del lote'}), 400 
-            lotes = LoteModel.get_lote(nombre, estado_lote)
-            # Si no se encuentran lotes, puedes retornar un mensaje específico
-            if not lotes:
-                return jsonify({'message': 'No se encontraron lotes'}), 404
-            return jsonify(lotes)
+            nombre_producto = request.args.get('nombre_producto')
+            lotes = LoteModel.get_lote_nombre(nombre_producto)
+
+            if lotes != None:
+                return jsonify(lotes)
+            else:
+                return jsonify(None)
         except Exception as ex:
-            return jsonify({'message': str(ex)}), 500
-    else:
-        return jsonify({'message': "token no valido"}), 500
-
-
-#Ruta para agregar un proveedor a la BD 
-@main.route('/add', methods=['POST'])
-def add_proveedor():
+            return jsonify({'message' : str(ex)}) , 500
+        
+#Ruta para traer un lote por su estado
+@main.route('/getOne_estado', methods=['GET'])
+def get_lote_estado():
     token = request.args.get('token')
+    if ValidarToken.validar_token(token):
+        try:
+            estado_lote = request.args.get('estado_lote')
+            lotes = LoteModel.get_lote_estado(estado_lote)
+
+            if lotes != None:
+                return jsonify(lotes)
+            else:
+                return jsonify(None)
+        except Exception as ex:
+            return jsonify({'message' : str(ex)}) , 500
+
+
+@main.route('/add', methods=['POST'])
+def add_lote():
+    token = request.form.get('token')
     if ValidarToken.validar_token(token) == "administrador":
         try:
             # Recibir datos desde el formulario HTTP
-            nombre = request.form.get('nombre')
-            telefono = request.form.get('telefono')
-            direccion = request.form.get('direccion')
+            
+            fecha_llegada = request.form.get('fechaLlegada')
+            peso = str(request.form.get('peso'))
+            precio = str(request.form.get('precio'))
+            nombre_proveedor = request.form.get('nombre_proveedor')
+            nombre_producto = request.form.get('nombre_producto')
+            
 
-            success = LoteModel.add_proveedor(nombre, telefono, direccion, "activo")
+            success = LoteModel.add_lote(fecha_llegada, peso, precio, nombre_proveedor, nombre_producto)
 
             # Mensaje para mirar si fue exitoso los cambios en la BD
-            if success :  
+            if success:  
                 return jsonify({'status': 'succesfull'})
             else:
-                return jsonify({'status': "Ningun Proveedor Agregado"}), 404
+                return jsonify({'status': "Ningun Lote Agregado"}), 404
         except Exception as ex:
             return jsonify({'status': str(ex)}), 500
     else:
         return jsonify({'status': "token no valido"})
+
 
 #Ruta para actualizar un Proveedor
 @main.route('/update', methods=['PUT'])

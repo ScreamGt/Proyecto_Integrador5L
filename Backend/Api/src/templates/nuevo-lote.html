@@ -1,84 +1,113 @@
 {% extends "menu_plantilla.html" %}
 {% block title %}Inicio | Fruber{% endblock %}
 {% block mainContent %}
-    <!-- [ Main Content ] start -->
-    <div class="pcoded-main-container">
-        <div class="pcoded-content">
-            <div class="card" style="background-color: white; border-radius: 8px; box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);">
-                <div class="card-body">
-                    <!-- Botón de volver con un color gris claro -->
-                    <a href="/lote" class="btn btn-light" style="background-color: #f0f0f0; color: #333;">
-                        <i class="feather icon-arrow-left"></i> VOLVER
-                    </a>
-                    <form>
-                        <!-- Primera fila con 2 campos: Lote y Peso -->
-                        <div class="row">
-                            
-                            <!-- Campo Peso en KG -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="peso">Peso (en KG)</label>
-                                    <input type="text" class="form-control" id="peso" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                </div>
-                            </div>
-                        </div>
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+        <div class="card"
+            style="background-color: white; border-radius: 8px; box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);">
+            <div class="card-body">
+                <!-- Botón de volver con un color gris claro -->
+                <a href="/lote" class="btn btn-light" style="background-color: #f0f0f0; color: #333;">
+                    <i class="feather icon-arrow-left"></i> VOLVER
+                </a>
+                <form id="AddLote" method="POST">
+                    <!-- Campo oculto para el token -->
+                    <input type="hidden" name="token" id="tokenInput">
+                    <!-- Campo vacío que se llenará con JavaScript -->
+                    <!-- Primera fila con 2 campos: Lote y Peso -->
+                    <div class="row">
 
-                        <!-- Segunda fila con 2 campos: Fecha de llegada y Proveedor -->
-                        <div class="row">
-                            <!-- Campo Fecha de Llegada -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="fechaLlegada">Fecha de Llegada</label>
-                                    <input type="date" class="form-control" id="fechaLlegada" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                </div>
-                            </div>
-                            <!-- Campo Proveedor -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="proveedor">Proveedor</label>
-                                    <select class="form-control" id="proveedor" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                        <option value="Proveedor 1">Proveedor 1</option>
-                                        <option value="Proveedor 2">Proveedor 2</option>
-                                        <option value="Proveedor 3">Proveedor 3</option>
-                                    </select>
-                                </div>
+                        <!-- Campo Peso en KG -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="peso">Peso (en KG)</label>
+                                <input type="number" class="form-control" id="peso" placeholder=""
+                                    style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Campo Nombre del Producto con lupa -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="nombreProducto">Nombre del Producto</label>
-                                    <div class="input-group" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                        <input type="text" class="form-control" id="nombreProducto" placeholder="" style="border-radius: 0; ">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button" style="border-radius: 0;">
-                                                <i class="fas fa-search"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="lote">Precio</label>
-                                    <input type="text" class="form-control" id="precio" placeholder="" style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                </div>
+                    <!-- Segunda fila con 2 campos: Fecha de llegada y Proveedor -->
+                    <div class="row">
+                        <!-- Campo Fecha de Llegada -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="fechaLlegada">Fecha de Llegada</label>
+                                <input type="date" class="form-control" id="fechaLlegada"
+                                    style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                             </div>
                         </div>
+                        <!-- Campo Proveedor -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nombre_proveedor">Proveedor</label>
+                                <input type="text" class="form-control" id="nombre_proveedor" placeholder=""
+                                    style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                            </div>
+                        </div>
+                    </div>
 
-                        <!-- Botón Agregar Lote -->
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn" style="background-color: #008080; color: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                                Agregar Lote
-                            </button>
+                    <!-- Campo Nombre del Producto con lupa -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nombre_producto">Producto</label>
+                                <input type="text" class="form-control" id="nombre_producto" placeholder=""
+                                    style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                            </div>
                         </div>
-                    </form>
-                </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="precio">Precio</label>
+                                <input type="number" class="form-control" id="precio" placeholder=""
+                                    style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <!-- Botón Agregar Lote -->
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn"
+                            style="background-color: #008080; color: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                            Agregar Lote
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    <!-- [ Main Content ] end -->
+</div>
+<!-- [ Main Content ] end -->
+<script>
+    document.getElementById('AddLote').addEventListener('submit', function (e) {
+    e.preventDefault(); // Evitar que el formulario se envíe de forma predeterminada
 
+    // recupera los valores que en el formulario
+    const formData = new FormData(this);
+    // ----------------------------------------
+    fetch('/lote/add?token=' + encodeURIComponent(userData['token']), {
+        method: 'POST',
+        body: formData, // Enviar los datos como FormData
+    })
+
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'succesfull') {
+                alert("creado correctamente");
+            }
+            else if(data.status === "token no valido"){
+                    vaciarUserData();
+                    window.location.href = '/login';
+            }
+            else {
+                alert('Ningun Lote Agregado');
+            }
+        })
+        .catch(error => {
+            console.error('Error during login:', error);
+        });
+});
+</script>
 {% endblock %}

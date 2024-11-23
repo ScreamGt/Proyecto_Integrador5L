@@ -103,7 +103,7 @@ class LoteModel:
 
             # Query con procedimiento para insertar un lote
             with connection.cursor() as cursor:
-                cursor.execute("SELECT insertar_lote(%s, %s, %s, %s, %s)", (nombre_producto, nombre_proveedor, fecha_llegada, peso, precio))
+                cursor.execute("CALL insertar_lote(%s, %s, %s, %s, %s)",(str(nombre_producto), str(nombre_proveedor), fecha_llegada, float(peso), float(precio)))
                 connection.commit()
 
             # Cerrar conexion BD y mostrar filas afectadas

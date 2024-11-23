@@ -23,7 +23,7 @@ def get_ventas():
 #Ruta para agregar una venta a la BD 
 @main.route('/add', methods=['POST'])
 def add_venta():
-    token = request.form.get('token')
+    token = request.args.get('token')
     if ValidarToken.validar_token(token) == "administrador":
         try:
             # Recibir datos desde el formulario HTTP

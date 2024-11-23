@@ -96,11 +96,6 @@
                                     class="feather icon-file-text"></i></span><span
                                 class="pcoded-mtext" >Reportes</span></a>
                     </li>
-                    <li class="nav-item">
-                        <a href="/alertas" class="nav-link "><span class="pcoded-micon"><i
-                                    class="feather icon-align-justify icon-bell"></i></span><span
-                                class="pcoded-mtext">Alertas</span></a>
-                    </li>
 
                 </ul>
             </div>
@@ -281,28 +276,39 @@
                     throw new Error('Error al cargar las notificaciones');
                 }
 
-                const mensajes = await response.json();
+                const data = await response.json(); // Verifica que la respuesta sea JSON
+                console.log('Respuesta del servidor:', data); // Ver la respuesta completa
 
-                // Llenar el dropdown de notificaciones con los mensajes recibidos
-                const notificacionesContainer = document.querySelector('.noti-body');
-                notificacionesContainer.innerHTML = ''; // Limpiar mensajes existentes
-                mensajes.forEach((mensaje) => {
-                    const li = document.createElement('li');
-                    li.className = 'notification';
-                    li.innerHTML = `
-                        <div class="media">
-                            <img class="img-radius"
-                                src="{{ url_for('static', filename='/assets/images/user/avatar-1.jpg') }}"
-                                alt="Notificación">
-                            <div class="media-body">
-                                <p><strong>Notificación</strong><span class="n-time text-muted"><i
-                                            class="icon feather icon-clock m-r-10"></i>Ahora</span></p>
-                                <p>${mensaje}</p>
+                // Verificamos si el objeto tiene la clave 'mensajes' y es un array
+                if (data.hasOwnProperty('mensajes') && Array.isArray(data.mensajes)) {
+                    const mensajes = data.mensajes; // Obtener el array de mensajes
+                    console.log('Mensajes:', mensajes); // Ver los mensajes
+
+                    const notificacionesContainer = document.querySelector('.noti-body');
+                    notificacionesContainer.innerHTML = ''; // Limpiar las notificaciones previas
+
+                    // Recorrer el array de mensajes y crear una notificación por cada uno
+                    mensajes.forEach((mensaje) => {
+                        console.log(`Mensaje: ${mensaje}`); // Ver cada mensaje
+
+                        // Crear el elemento <li> para cada notificación
+                        const li = document.createElement('li');
+                        li.className = 'notification';
+                        li.innerHTML = `
+                            <div class="media">
+                                <div class="media-body">
+                                    <p><strong>Notificación</strong><span class="n-time text-muted"><i
+                                                class="icon feather icon-clock m-r-10"></i>Ahora</span></p>
+                                    <p>${mensaje}</p>
+                                </div>
                             </div>
-                        </div>
-                    `;
-                    notificacionesContainer.appendChild(li);
-                });
+                        `;
+                        // Añadir la notificación a la lista de notificaciones
+                        notificacionesContainer.appendChild(li);
+                    });
+                } else {
+                    console.error('La clave "mensajes" no es un array válido');
+                }
             } catch (error) {
                 console.error('Error al cargar las notificaciones:', error);
             } finally {
@@ -315,6 +321,7 @@
     // Ejecutar al cargar el DOM
     document.addEventListener('DOMContentLoaded', cargarNotificaciones);
 </script>
+
 
 <script>
     document.getElementById("botonCerrarSesion").addEventListener("click", function (event) {

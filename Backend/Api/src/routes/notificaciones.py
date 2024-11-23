@@ -27,8 +27,14 @@ def notify_lote():
         cursor = conexion.cursor()
         cursor.execute("SELECT * FROM notify_arriving_lotes()")
         resultados = cursor.fetchall()
-        for row in resultados:
-            mensajes.append(row[0])  # Agregar el mensaje desde la función SQL
+        if not resultados:
+            print("No se encontraron lotes que lleguen hoy.")
+        else:
+            for row in resultados:
+                id_lote = row[0]
+                mensaje = f"Lote '{id_lote}' llegará hoy mismo."
+                mensajes.append(mensaje)
+
         cursor.close()
         conexion.close()
     except Exception as e:
@@ -36,7 +42,7 @@ def notify_lote():
     return mensajes
 
 # Nueva ruta combinada para notificaciones
-@main.route('/notify', methods=['GET'])
+@main.route('/notify')
 def notificaciones_route():
     mensajes_stock = notify_stock()
     mensajes_lote = notify_lote()

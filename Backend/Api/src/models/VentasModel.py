@@ -12,13 +12,13 @@ class VentasModel:
 
             #Query y operacion para obtener los proveedores
             with connection.cursor() as cursor:
-                cursor.execute("SELECT  * From proveedores where Lower(estado) = Lower('activo')")
+                cursor.execute("SELECT * FROM obtener_informacion_ventas();")
                 resultset = cursor.fetchall()
                 #print(resultset) para revisar si se recuperaron los datos de la BD
 
                 #Guardar proveedores en la lista con formato JSON
                 for row in resultset:
-                    venta = Ventas(row[0], row[1], row[2], row[3], row[4])
+                    venta = Ventas(fecha = row[0], nombre_producto = row[1], precio = row[2], cantidad_peso = row[3], total = row[4] )
                     ventas.append(venta.to_JSON())
 
             #Cerrar conexion BD

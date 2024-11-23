@@ -53,21 +53,34 @@ def get_lote_estado():
 
 @main.route('/add', methods=['POST'])
 def add_lote():
-    token = request.form.get('token')
+    token = request.args.get('token')
     if ValidarToken.validar_token(token) == "administrador":
         try:
             # Recibir datos desde el formulario HTTP
-            
-            fecha_llegada = request.form.get('fechaLlegada')
-            peso = str(request.form.get('peso'))
-            precio = str(request.form.get('precio'))
-            nombre_proveedor = request.form.get('nombre_proveedor')
-            nombre_producto = request.form.get('nombre_producto')
-            
+            fecha_llegada = request.form.get('fecha')  # Suponiendo que ya es una cadena en formato 'YYYY-MM-DD'
+            peso = request.form.get('peso')  # Se valida y convierte en float
+            precio = request.form.get('precio')  # Se valida y convierte en float
+            nombre_proveedor = request.form.get('proveedor')  # Cadena
+            nombre_producto = request.form.get('producto')  # Cadena
 
-            success = LoteModel.add_lote(fecha_llegada, peso, precio, nombre_proveedor, nombre_producto)
+            # Validar y convertir los tipos de datos
+            try:
+                peso = float(peso)  # Convertir peso a tipo float
+                precio = float(precio)  # Convertir precio a tipo float
+            except ValueError:
+                return jsonify({'status': 'Error en el tipo de dato de peso o precio'}), 400
 
-            # Mensaje para mirar si fue exitoso los cambios en la BD
+            # Validar fecha
+            try:
+                from datetime import datetime
+                fecha_llegada = datetime.strptime(fecha_llegada, '%Y-%m-%d').date()  # Convertir a tipo fecha
+            except ValueError:
+                return jsonify({'status': 'Error en el formato de fecha (debe ser YYYY-MM-DD)'}), 400
+
+            # Llamar al modelo para agregar el lote
+            success = LoteModel.add_lote(nombre_producto,nombre_proveedor,fecha_llegada, peso, precio)
+
+            # Verificar si se realizó correctamente la inserción
             if success:  
                 return jsonify({'status': 'succesfull'})
             else:
@@ -76,6 +89,7 @@ def add_lote():
             return jsonify({'status': str(ex)}), 500
     else:
         return jsonify({'status': "token no valido"})
+
 
 
 #Ruta para actualizar un Proveedor

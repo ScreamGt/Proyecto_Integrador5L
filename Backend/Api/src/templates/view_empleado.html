@@ -1,95 +1,234 @@
 {% extends "menu_plantilla.html" %}
-{% block title %}Inicio | Fruber{% endblock %}
+{% block title %}Inicio | Empleados{% endblock %}
 {% block mainContent %}
-	
-    <!-- [ Main Content ] start -->
-    <div class="pcoded-main-container">
-        <div class="pcoded-content">
-            <!-- Barra de búsqueda, filtro y botón -->
-            <div class="row mb-4">
-                <div class="col-md-4">
+<div class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- Barra de búsqueda, filtro y botón -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <form id="searchForm">
                     <div class="input-group" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                        <input type="text" class="form-control" placeholder="Buscar un empleado">
+                        <input type="text" class="form-control" id="searchInput" name="nombre" placeholder="Buscar un empleado">
                         <div class="input-group-append">
-                            <button class="btn btn-primary" type="button" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                                <i class="fas fa-search"></i> <!-- Icono de lupa -->
+                            <button class="btn btn-primary" type="button" id="searchButton" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                                <i class="fas fa-search"></i>
                             </button>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <!-- Botón de Filtrar por Nombre con menú desplegable -->
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                            Filtrar por Nombre
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Filtrar por nombre</a>
-                            <a class="dropdown-item" href="#">Filtrar por cedula</a>
-                            <a class="dropdown-item" href="#">Filtrar por rol</a>
-                        </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                        Filtrar por: <span id="filterText">Cedula</span>
+                    </button>
+                    <div class="dropdown-menu" id="filtro" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#" data-value="cedula">Cédula</a>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <a href="/addEmpleado" class="btn btn-primary" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">Agregar Empleado</a>
-                </div>
             </div>
-
-			<!-- Botones debajo de la tabla -->
-            <div class="mt-3">
-                <button class="btn btn-warning" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                    <i class="fas fa-sync-alt"></i> <!-- Icono de actualizar -->
-                    Actualizar
-                </button>
-                <button class="btn btn-danger" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                    <i class="fas fa-trash-alt"></i> <!-- Icono de eliminar -->
-                    Eliminar
-                </button>
+            <div class="col-md-3" id="addEmpleadoButton">
+                <a href="/addEmpleado" class="btn btn-primary" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">Agregar Empleado</a>
             </div>
+        </div>
 
-            <!-- Tabla con columna Dirección -->
-            <div class="table-responsive mt-4" style="box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); border-radius: 8px;">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th style="text-align:center;">Nombre</th>
-                            <th style="text-align:center;">Cedula</th>
-                            <th style="text-align:center;">Correo</th>
-                            <th style="text-align:center;">Rol</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Fila de ejemplo 1 -->
-                        <tr>
-                            <td style="text-align:center;">Michel Contreras</td>
-                            <td style="text-align:center;">1005564746</td>
-                            <td style="text-align:center;">michel_contrerar@gmail.com</td>
-                            <td style="text-align:center;">administrador</td>
-                            <td style="text-align:center;">
-                                <button class="btn btn-info btn-sm">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </td>
-                        </tr>
+        <!-- Botones de acción -->
+        <div class="mt-3">
+            <button class="btn btn-warning" id="updateButton" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                <i class="fas fa-sync-alt"></i> Actualizar
+            </button>
+            <button class="btn btn-primary" id="editButton" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); margin-left: 10px;">
+                <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="btn btn-danger" id="deleteButton" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); margin-left: 10px;">
+                <i class="fas fa-trash-alt"></i> Eliminar
+            </button>
+        </div>
 
-                        <!-- Fila de ejemplo 2 -->
-                        <tr>
-                            <td style="text-align:center;">Jennyfer Garcia</td>
-                            <td style="text-align:center;">1004926901</td>
-                            <td style="text-align:center;">jgarcia63@udi.edu.co</td>
-                            <td style="text-align:center;">empleado</td>
-                            <td style="text-align:center;">
-                                <button class="btn btn-info btn-sm">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            
+        <!-- Tabla de empleados -->
+        <div class="table-responsive mt-4" style="box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); border-radius: 8px;">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;">Nombre</th>
+                        <th style="text-align:center;">Cédula</th>
+                        <th style="text-align:center;">Correo</th>
+                        <th style="text-align:center;">telefono</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Filas dinámicas -->
+                </tbody>
+            </table>
         </div>
     </div>
-    <!-- [ Main Content ] end -->
-	{% endblock %}
+</div>
+
+<script>
+    var authServer = "https://auth.fruverudi.com";
+    let currentFilter = 'cedula'; // Filtro por defecto
+
+    // Manejar clic en opciones del dropdown
+    document.getElementById('filtro').addEventListener('click', function(event) {
+        const target = event.target;
+        if (target && target.matches('.dropdown-item')) {
+            currentFilter = target.getAttribute('data-value');
+            document.getElementById('filterText').innerText = target.innerText;
+        }
+    });
+
+    // Modificar el endpoint en el botón de búsqueda según el filtro
+    document.getElementById('searchButton').addEventListener('click', function() {
+        const searchInput = document.getElementById('searchInput').value.trim();
+        let endpoint;
+
+        if (searchInput) {
+            if (currentFilter === 'cedula') {
+                endpoint = `/gestion/consultarempleado_cedula?cedula=${encodeURIComponent(searchInput)}&token=${encodeURIComponent(userData['token'])}`;
+            }
+        } else {
+            endpoint = `/gestion/consultarempleados?token=${encodeURIComponent(userData['token'])}`;
+        }
+
+        fetch((authServer + endpoint),{method: 'POST'})
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la red: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tableBody = document.getElementById('tableBody');
+                tableBody.innerHTML = '';
+
+                if (Array.isArray(data)) {
+                    if (data.length === 0) {
+                        alert('No se encontraron empleados.');
+                    } else {
+                        data.forEach(empleado => {
+                            tableBody.appendChild(createRow(empleado));
+                        });
+                    }
+                } else if (data) {
+                    tableBody.appendChild(createRow(data));
+                } else {
+                    alert('Empleado no encontrado');
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener empleados:', error);
+                alert('Ocurrió un error al obtener los empleados.');
+            });
+    });
+
+    function createRow(empleado) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td style="text-align:center;">${empleado.nombre}</td>
+            <td style="text-align:center;">${empleado.cedula}</td>
+            <td style="text-align:center;">${empleado.correo}</td>
+            <td style="text-align:center;">${empleado.telefono}</td>
+        `;
+        row.addEventListener('click', function() {
+            selectRow(row);
+        });
+        return row;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const addEmpleadoButton = document.getElementById('addEmpleadoButton');
+        const updateButton = document.getElementById('updateButton');
+        const deleteButton = document.getElementById('deleteButton');
+        const editButton = document.getElementById('editButton');
+
+        if (userData['rol'] === 'administrador') {
+            addEmpleadoButton.style.display = 'inline-block';
+            updateButton.style.display = 'inline-block';
+            deleteButton.style.display = 'inline-block';
+            editButton.style.display = 'inline-block';
+        } else if (userData['rol'] === 'empleado') {
+            addEmpleadoButton.style.display = 'none';
+            updateButton.style.display = 'none';
+            deleteButton.style.display = 'none';
+            editButton.style.display = 'none';
+        }
+    });
+
+    let selectedRow = null;
+
+    function selectRow(row) {
+        if (selectedRow) selectedRow.classList.remove('selected');
+        selectedRow = row;
+        selectedRow.classList.add('selected');
+    }
+
+    document.getElementById('editButton').addEventListener('click', function() {
+        if (!selectedRow) {
+            alert('Selecciona una fila para editar.');
+            return;
+        }
+
+        const cells = selectedRow.getElementsByTagName('td');
+        cells[1].contentEditable = "true";
+        cells[2].contentEditable = "true";
+        cells[3].contentEditable = "true";
+        cells[1].focus();
+    });
+
+    document.getElementById('updateButton').addEventListener('click', function() {
+        if (!selectedRow) {
+            alert('Selecciona una fila para actualizar.');
+            return;
+        }
+
+        const cells = selectedRow.getElementsByTagName('td');
+        const nombre = cells[0].innerText;
+        const cedula = cells[1].innerText;
+        const correo = cells[2].innerText;
+        const telefono = cells[3].innerText;
+
+        fetch(authServer + `/gestion/modificarempleado?nuevo_nombre=${encodeURIComponent(nombre)}&cedula=${encodeURIComponent(cedula)}&nuevo_correo=${encodeURIComponent(correo)}&nuevo_telefono=${encodeURIComponent(telefono)}&token=${encodeURIComponent(userData['token'])}`, {
+            method: 'POST',
+            mode: "cors"
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Error al actualizar.');
+            return response.json();
+        })
+        .then(() => {
+            alert('Empleado actualizado exitosamente.');
+            document.getElementById('searchButton').click();
+        })
+        .catch(error => alert('Ocurrió un error al actualizar el empleado.'));
+    });
+
+    document.getElementById('deleteButton').addEventListener('click', function() {
+        if (!selectedRow) {
+            alert('Selecciona una fila para eliminar.');
+            return;
+        }
+
+        const cells = selectedRow.getElementsByTagName('td');
+        const cedula = cells[1].innerText;
+
+        fetch(authServer + `/gestion/eliminarempleado?cedula=${encodeURIComponent(cedula)}&token=${encodeURIComponent(userData['token'])}`, {
+            method: 'POST'
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Error al eliminar.');
+            return response.json();
+        })
+        .then(() => {
+            alert('Empleado eliminado exitosamente.');
+            document.getElementById('searchButton').click();
+        })
+        .catch(error => alert('Ocurrió un error al eliminar el empleado.'));
+    });
+
+
+</script>
+
+<style>
+    .selected { background-color: #edf7f8; }
+</style>
+{% endblock %}

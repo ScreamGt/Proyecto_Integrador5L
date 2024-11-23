@@ -3,13 +3,6 @@
 
 <head>
     <title>{% block title %}{% endblock %}</title>
-    <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 11]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-    <!-- Meta -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -73,35 +66,35 @@
                     <li class="nav-item">
                         <a href="/" class="nav-link "><span class="pcoded-micon"><i
                                     class="feather icon-repeat"></i></span><span
-                                class="pcoded-mtext">Ventas</span></a>
+                                class="pcoded-mtext" >Ventas</span></a>
                     </li>
                     <li class="nav-item">
                         <a href="/proveedores" class="nav-link "><span class="pcoded-micon"><i
                                     class="feather icon-users"></i></span><span
-                                class="pcoded-mtext">Proveedores</span></a>
+                                class="pcoded-mtext" >Proveedores</span></a>
                     </li>
-                    <li class="nav-item">
+                    <li id="empleados" class="nav-item">
                         <a href="/empleado" class="nav-link "><span class="pcoded-micon"><i
                                     class="feather icon-users"></i></span><span
-                                class="pcoded-mtext">Empleados</span></a>
+                                class="pcoded-mtext" >Empleados</span></a>
                     </li>
                     <li class="nav-item pcoded-hasmenu">
                         <a href="#!" class="nav-link "><span class="pcoded-micon"><i
                                     class="feather icon-layout"></i></span><span
                                 class="pcoded-mtext">Inventario</span></a>
                         <ul class="pcoded-submenu">
-                            <li><a href="/lote"><i class="feather icon-grid"></i> Lote</a></li>
-                            <li><a href="/categoria"><i class="feather icon-grid"></i> Categoria</a></li>
+                            <li><a id="lote"href="/lote"><i class="feather icon-grid"></i> Lote</a></li>
+                            <li><a  href="/categoria"><i class="feather icon-grid"></i> Categoria</a></li>
                             <li><a href="/productos"><i class="feather icon-shopping-cart"></i> Productos</a></li>
                         </ul>
                     </li>
                     <li class="nav-item pcoded-menu-caption">
                         <label>Reportes &amp; Alertas</label>
                     </li>
-                    <li class="nav-item">
+                    <li id="reportes" class="nav-item">
                         <a href="/reportes" class="nav-link "><span class="pcoded-micon"><i
                                     class="feather icon-file-text"></i></span><span
-                                class="pcoded-mtext">Reportes</span></a>
+                                class="pcoded-mtext" >Reportes</span></a>
                     </li>
                     <li class="nav-item">
                         <a href="/alertas" class="nav-link "><span class="pcoded-micon"><i
@@ -216,7 +209,6 @@
     <!-- AquÃ­ irÃ¡ el contenido especÃ­fico de cada pÃ¡gina -->
     {% endblock %}
 
-
     <!-- Required Js -->
     <script src="{{ url_for('static', filename='assets/js/vendor-all.min.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/plugins/bootstrap.min.js') }}"></script>
@@ -275,6 +267,54 @@
         </div>
     </div>
 </footer>
+<!-- [ Footer ] end -->
+<script>
+    // Variable para controlar si ya se cargó el listado de notificaciones
+    let notifyLoaded = null;
+
+    // Función para cargar notificaciones desde el backend
+    async function cargarNotificaciones() {
+        if (notifyLoaded === null) {
+            try {
+                const response = await fetch('/notificacion/notify');
+                if (!response.ok) {
+                    throw new Error('Error al cargar las notificaciones');
+                }
+
+                const mensajes = await response.json();
+
+                // Llenar el dropdown de notificaciones con los mensajes recibidos
+                const notificacionesContainer = document.querySelector('.noti-body');
+                notificacionesContainer.innerHTML = ''; // Limpiar mensajes existentes
+                mensajes.forEach((mensaje) => {
+                    const li = document.createElement('li');
+                    li.className = 'notification';
+                    li.innerHTML = `
+                        <div class="media">
+                            <img class="img-radius"
+                                src="{{ url_for('static', filename='/assets/images/user/avatar-1.jpg') }}"
+                                alt="Notificación">
+                            <div class="media-body">
+                                <p><strong>Notificación</strong><span class="n-time text-muted"><i
+                                            class="icon feather icon-clock m-r-10"></i>Ahora</span></p>
+                                <p>${mensaje}</p>
+                            </div>
+                        </div>
+                    `;
+                    notificacionesContainer.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error al cargar las notificaciones:', error);
+            } finally {
+                // Cambiar el estado para que no se vuelva a cargar
+                notifyLoaded = true;
+            }
+        }
+    }
+
+    // Ejecutar al cargar el DOM
+    document.addEventListener('DOMContentLoaded', cargarNotificaciones);
+</script>
 
 <script>
     document.getElementById("botonCerrarSesion").addEventListener("click", function (event) {
@@ -286,10 +326,22 @@
     document.getElementById("nombreUsuarioVista").innerHTML = userData["nombre"];
     document.getElementById("rolUsuarioVista").innerHTML = userData["rol"];
 
-    
+    document.addEventListener('DOMContentLoaded', function () {
+        const empleados = document.getElementById('empleados');
+        const reportes = document.getElementById('reportes');
+        const Lote = document.getElementById('lote');
+
+        if (userData['rol'] === 'administrador') {
+            empleados.style.display = 'inline-block';
+            reportes.style.display = 'inline-block';
+            Lote.style.display = 'inline-block';
+        } else if (userData['rol'] === 'empleado') {
+            empleados.style.display = 'none';
+            reportes.style.display = 'none';
+            Lote.style.display = 'none';
+        }
+    });
+
 </script>
-
-
-<!-- [ Footer ] end -->
 
 </html>
